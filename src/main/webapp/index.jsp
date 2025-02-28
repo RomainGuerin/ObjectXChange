@@ -12,7 +12,7 @@
   <title>Bienvenue sur ObjectXChange</title>
 </head>
 <body>
-<h1>ObjectXChange</h1>
+<h1>ObjectXChange - Test</h1>
 <a href="register.jsp">Inscription</a> | <a href="login.jsp">Connexion</a>
 <br>
 <br>
