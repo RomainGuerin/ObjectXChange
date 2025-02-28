@@ -44,7 +44,7 @@
         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
       </figure>
       <div class="card-body">
-        <h2 class="card-title">Produit 1</h2>
+        <h2 class="card-title">Produit 1<div class="badge">Décoration</div></h2>
         <p>If a dog chews shoes whose shoes does he choose?</p>
         <div class="card-actions justify-end mt-4">
           <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
@@ -57,7 +57,7 @@
         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
       </figure>
       <div class="card-body">
-        <h2 class="card-title">Produit 2</h2>
+        <h2 class="card-title">Produit 2<div class="badge">Décoration</div></h2>
         <p>If a dog chews shoes whose shoes does he choose?</p>
         <div class="card-actions justify-end">
           <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
@@ -70,7 +70,7 @@
         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
       </figure>
       <div class="card-body">
-        <h2 class="card-title">Produit 3</h2>
+        <h2 class="card-title">Produit 3<div class="badge">Décoration</div></h2>
         <p>If a dog chews shoes whose shoes does he choose?</p>
         <div class="card-actions justify-end">
           <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
@@ -85,7 +85,7 @@
         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
       </figure>
       <div class="card-body">
-        <h2 class="card-title">Produit 1</h2>
+        <h2 class="card-title">Produit 1<div class="badge">Décoration</div></h2>
         <p>If a dog chews shoes whose shoes does he choose?</p>
         <div class="card-actions justify-end mt-4">
           <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
@@ -98,7 +98,7 @@
         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
       </figure>
       <div class="card-body">
-        <h2 class="card-title">Produit 2</h2>
+        <h2 class="card-title">Produit 2<div class="badge">Décoration</div></h2>
         <p>If a dog chews shoes whose shoes does he choose?</p>
         <div class="card-actions justify-end">
           <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
@@ -111,7 +111,7 @@
         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
       </figure>
       <div class="card-body">
-        <h2 class="card-title">Produit 3</h2>
+        <h2 class="card-title">Produit 3<div class="badge">Décoration</div></h2>
         <p>If a dog chews shoes whose shoes does he choose?</p>
         <div class="card-actions justify-end">
           <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
@@ -126,11 +126,11 @@
       <form method="dialog">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
       </form>
-      <h3 class="text-lg font-bold mb-4">Ajouter un produit</h3>
+      <h3 class="text-lg font-bold mb-4">Ajouter un objet</h3>
       <form action="add_product" method="post">
         <div class="items-center">
           <label class="input input-bordered flex items-center gap-2 mb-2">
-            <input type="text" class="grow" placeholder="Nom du produit" />
+            <input type="text" class="grow" placeholder="Nom de l'objet" />
           </label>
           <select class="select select-bordered w-full mb-4">
             <option disabled selected>Choisir une catégorie</option>
@@ -139,7 +139,7 @@
             <option>Décoration</option>
           </select>
         </div>
-        <button class="btn btn-primary" type="submit">Ajouter le produit</button>
+        <button class="btn btn-primary" type="submit">Ajouter l'objet</button>
       </form>
     </div>
   </dialog>
