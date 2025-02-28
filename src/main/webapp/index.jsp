@@ -35,10 +35,10 @@
       <option>Catégorie 1</option>
       <option>Catégorie 2</option>
     </select>
-    <button onclick="my_modal_4.showModal()" class="ml-auto btn">Ajouter un objet</button>
+    <button onclick="modal_add_object.showModal()" class="ml-auto btn btn-neutral">Ajouter un objet</button>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
     <div class="card card-compact bg-base-100 shadow-xl">
       <figure>
         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
@@ -47,7 +47,7 @@
         <h2 class="card-title">Produit 1</h2>
         <p>If a dog chews shoes whose shoes does he choose?</p>
         <div class="card-actions justify-end mt-4">
-          <button class="btn" onclick="my_modal_3.showModal()">Proposer un échange</button>
+          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@
         <h2 class="card-title">Produit 2</h2>
         <p>If a dog chews shoes whose shoes does he choose?</p>
         <div class="card-actions justify-end">
-          <button class="btn" onclick="my_modal_3.showModal()">Proposer un échange</button>
+          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
         </div>
       </div>
     </div>
@@ -73,26 +73,217 @@
         <h2 class="card-title">Produit 3</h2>
         <p>If a dog chews shoes whose shoes does he choose?</p>
         <div class="card-actions justify-end">
-          <button class="btn" onclick="my_modal_3.showModal()">Proposer un échange</button>
+          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
         </div>
       </div>
     </div>
   </div>
 
-  <dialog id="my_modal_3" class="modal">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="card card-compact bg-base-100 shadow-xl">
+      <figure>
+        <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
+      </figure>
+      <div class="card-body">
+        <h2 class="card-title">Produit 1</h2>
+        <p>If a dog chews shoes whose shoes does he choose?</p>
+        <div class="card-actions justify-end mt-4">
+          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-compact bg-base-100 shadow-xl">
+      <figure>
+        <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
+      </figure>
+      <div class="card-body">
+        <h2 class="card-title">Produit 2</h2>
+        <p>If a dog chews shoes whose shoes does he choose?</p>
+        <div class="card-actions justify-end">
+          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-compact bg-base-100 shadow-xl">
+      <figure>
+        <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
+      </figure>
+      <div class="card-body">
+        <h2 class="card-title">Produit 3</h2>
+        <p>If a dog chews shoes whose shoes does he choose?</p>
+        <div class="card-actions justify-end">
+          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <dialog id="modal_add_object" class="modal">
     <div class="modal-box">
       <form method="dialog">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
       </form>
-      <h3 class="text-lg font-bold">Hello!</h3>
-      <p class="py-4">Press ESC key or click on ✕ button to close</p>
+      <h3 class="text-lg font-bold mb-4">Ajouter un produit</h3>
+      <form action="add_product" method="post">
+        <div class="items-center">
+          <label class="input input-bordered flex items-center gap-2 mb-2">
+            <input type="text" class="grow" placeholder="Nom du produit" />
+          </label>
+          <select class="select select-bordered w-full mb-4">
+            <option disabled selected>Choisir une catégorie</option>
+            <option>Électronique</option>
+            <option>Loisirs</option>
+            <option>Décoration</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Ajouter le produit</button>
+      </form>
     </div>
   </dialog>
 
-  <dialog id="my_modal_4" class="modal">
+
+
+
+  <dialog id="modal_product_client" class="modal">
     <div class="modal-box w-11/12 max-w-5xl">
-      <h3 class="text-lg font-bold">Hello!</h3>
-      <p class="py-4">Click the button below to close</p>
+      <h3 class="text-lg font-bold mb-4">Mes produits</h3>
+      <div class="overflow-x-auto">
+        <table class="table">
+          <tbody>
+          <!-- row 1 -->
+          <tr>
+            <th>
+              <label>
+                <input type="checkbox" class="checkbox" />
+              </label>
+            </th>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar">
+                  <div class="mask mask-squircle h-12 w-12">
+                    <img
+                            src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                            alt="Avatar Tailwind CSS Component" />
+                  </div>
+                </div>
+                <div>
+                  <div class="font-bold">Hart Hagerty</div>
+                  <div class="text-sm opacity-50">United States</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              Zemlak, Daniel and Leannon
+              <br />
+              <span class="badge badge-ghost badge-sm">Desktop Support Technician</span>
+            </td>
+            <td>Purple</td>
+            <th>
+              <button class="btn btn-ghost btn-xs">details</button>
+            </th>
+          </tr>
+          <!-- row 2 -->
+          <tr>
+            <th>
+              <label>
+                <input type="checkbox" class="checkbox" />
+              </label>
+            </th>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar">
+                  <div class="mask mask-squircle h-12 w-12">
+                    <img
+                            src="https://img.daisyui.com/images/profile/demo/3@94.webp"
+                            alt="Avatar Tailwind CSS Component" />
+                  </div>
+                </div>
+                <div>
+                  <div class="font-bold">Brice Swyre</div>
+                  <div class="text-sm opacity-50">China</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              Carroll Group
+              <br />
+              <span class="badge badge-ghost badge-sm">Tax Accountant</span>
+            </td>
+            <td>Red</td>
+            <th>
+              <button class="btn btn-ghost btn-xs">details</button>
+            </th>
+          </tr>
+          <!-- row 3 -->
+          <tr>
+            <th>
+              <label>
+                <input type="checkbox" class="checkbox" />
+              </label>
+            </th>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar">
+                  <div class="mask mask-squircle h-12 w-12">
+                    <img
+                            src="https://img.daisyui.com/images/profile/demo/4@94.webp"
+                            alt="Avatar Tailwind CSS Component" />
+                  </div>
+                </div>
+                <div>
+                  <div class="font-bold">Marjy Ferencz</div>
+                  <div class="text-sm opacity-50">Russia</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              Rowe-Schoen
+              <br />
+              <span class="badge badge-ghost badge-sm">Office Assistant I</span>
+            </td>
+            <td>Crimson</td>
+            <th>
+              <button class="btn btn-ghost btn-xs">details</button>
+            </th>
+          </tr>
+          <!-- row 4 -->
+          <tr>
+            <th>
+              <label>
+                <input type="checkbox" class="checkbox" />
+              </label>
+            </th>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar">
+                  <div class="mask mask-squircle h-12 w-12">
+                    <img
+                            src="https://img.daisyui.com/images/profile/demo/5@94.webp"
+                            alt="Avatar Tailwind CSS Component" />
+                  </div>
+                </div>
+                <div>
+                  <div class="font-bold">Yancy Tear</div>
+                  <div class="text-sm opacity-50">Brazil</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              Wyman-Ledner
+              <br />
+              <span class="badge badge-ghost badge-sm">Community Outreach Specialist</span>
+            </td>
+            <td>Indigo</td>
+            <th>
+              <button class="btn btn-ghost btn-xs">details</button>
+            </th>
+          </tr>
+          </tbody>
+        </table>
+      </div>
       <div class="modal-action">
         <form method="dialog">
           <!-- if there is a button, it will close the modal -->
@@ -175,7 +366,6 @@
       </form>
     </div>
   </dialog>
-
 </div>
 </body>
 </html>
