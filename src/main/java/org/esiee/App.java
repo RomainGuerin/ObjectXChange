@@ -2,6 +2,8 @@ package org.esiee;
 
 import org.esiee.dao.UserDao;
 import org.esiee.dao.UserDaoImpl;
+import org.esiee.manager.UserManager;
+import org.esiee.model.User;
 import org.esiee.services.UserService;
 
 import java.sql.Connection;
@@ -19,23 +21,16 @@ public class App {
      * @param args Command line arguments
      */
     public static void main(String[] args) {
-        // URL of the SQLite database
-        String url = "jdbc:sqlite:database.db";
+        // Initialize UserDao implementation
+        UserDao userDao = new UserDaoImpl();
+        UserService userService = new UserService(userDao);
+        UserManager userManager = new UserManager(userService);
 
-        // Try-with-resources statement to ensure the connection is closed automatically
-        try (Connection conn = DriverManager.getConnection(url)) {
-            if (conn != null) {
-                System.out.println("Connexion à SQLite établie.");
+        // Register a new user
+//        userManager.register("John Doe", "test", "password");
 
-                // Initialize UserDao implementation
-                UserDao userDao = new UserDaoImpl();
-
-                // Initialize UserService with the UserDao
-                UserService userService = new UserService(userDao);
-            }
-        } catch (SQLException e) {
-            // Handle SQL exception
-            System.out.println("Erreur de connexion : " + e.getMessage());
-        }
+        // Login a user
+//        User test = userManager.login("test", "password");
+//        System.out.println(test.getId());
     }
 }
