@@ -6,18 +6,29 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<html data-theme="emerald">
 <head>
-    <title>Title</title>
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<a href="index.jsp">Retour à l'accueil</a>
-<form action="login" method="post">
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="password" name="password" placeholder="Mot de passe" required>
-    <button type="submit">Se connecter</button>
-    <a href="register.jsp">Inscription</a>
-</form>
+<div class="navbar bg-base-100 mb-8">
+    <div class="flex-1">
+        <a href="index.jsp" class="btn btn-ghost text-xl">Object<span class="text-primary">X</span>Change</a>
+    </div>
+    <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+            <li><a href="register.jsp">Inscription</a></li>
+            <li><a href="login.jsp">Connexion</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="mx-24">
+
+</div>
+
 
 </body>
 </html>
