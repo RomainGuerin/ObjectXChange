@@ -17,7 +17,9 @@
 
 <div class="navbar bg-base-100 mb-8">
   <div class="flex-1">
-    <a class="btn btn-ghost text-xl">Object<span class="text-primary">X</span>Change</a>
+    <a class="btn btn-ghost">
+      <img src="images/logo.png" alt="Logo ObjectXChange" class="h-10">
+    </a>
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
@@ -30,7 +32,7 @@
 <div class="mx-6">
   <div class="mb-6 flex items-center">
     <div class="font-semibold text-xl">Liste objets</div>
-    <select class="ml-4 select select-bordered w-full max-w-xs">
+    <select class="ml-4 mr-4 select select-bordered w-full max-w-xs">
       <option disabled selected>Toutes les catégories</option>
       <option>Catégorie 1</option>
       <option>Catégorie 2</option>
