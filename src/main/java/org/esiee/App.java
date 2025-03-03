@@ -1,14 +1,8 @@
 package org.esiee;
 
-import org.esiee.dao.UserDao;
-import org.esiee.dao.UserDaoImpl;
+import org.esiee.dao.*;
 import org.esiee.manager.UserManager;
-import org.esiee.model.User;
-import org.esiee.services.UserService;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import org.esiee.service.UserService;
 
 /**
  * The main application class that establishes a connection to a SQLite database
@@ -23,7 +17,10 @@ public class App {
     public static void main(String[] args) {
         // Initialize UserDao implementation
         UserDao userDao = new UserDaoImpl();
-        UserService userService = new UserService(userDao);
+        ItemDao itemDao = new ItemDaoImpl();
+        CategoryDao categoryDao = new CategoryDaoImpl();
+        ExchangeDao exchangeDao = new ExchangeDaoImpl();
+        UserService userService = new UserService(userDao, itemDao, categoryDao, exchangeDao);
         UserManager userManager = new UserManager(userService);
 
         // Register a new user

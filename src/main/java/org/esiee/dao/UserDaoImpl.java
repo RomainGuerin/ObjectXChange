@@ -23,9 +23,6 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getById(int id) { return null; }
-
-    @Override
     public User getByEmail(String email) {
         String query = "SELECT * FROM User WHERE email = ?";
         try (Connection con = DatabaseConnection.getConnection();
@@ -49,11 +46,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean update(User entity) {
-        return false;
-    }
-
-    @Override
-    public boolean delete(User entity) {
         return false;
     }
 }
