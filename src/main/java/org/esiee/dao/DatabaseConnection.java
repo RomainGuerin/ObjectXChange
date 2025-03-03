@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:sqlite:database.db";
+    private static final String URL = "jdbc:sqlite:C:/Users/Loic/dev/esiee/java/ObjectXChange/database.db";
     private static Connection connection;
 
     private DatabaseConnection() {};
@@ -13,8 +13,11 @@ public class DatabaseConnection {
     public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
+                Class.forName("org.sqlite.JDBC");
                 connection = DriverManager.getConnection(URL);
             }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Erreur: Driver JDBC SQLite introuvable", e);
         } catch (SQLException e) {
             throw new RuntimeException("Database connection error: " + e.getMessage(), e);
         }
