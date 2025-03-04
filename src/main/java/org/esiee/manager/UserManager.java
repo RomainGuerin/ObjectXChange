@@ -1,10 +1,7 @@
 package org.esiee.manager;
 
-import org.esiee.model.Category;
-import org.esiee.model.Exchange;
-import org.esiee.model.Item;
+import org.esiee.model.*;
 import org.esiee.service.UserService;
-import org.esiee.model.User;
 
 import java.util.Date;
 import java.util.List;
@@ -24,39 +21,39 @@ public class UserManager {
         return userService.loginUser(new User(email, password));
     }
 
-    public void addItem(String name, int userId, int category) {
-        userService.addItem(new Item(name, userId, category));
+    public void addProduct(String name, String description, String image, int userId, int category, boolean isAvailable) {
+        userService.addProduct(new Product(name, description, image, userId, category, isAvailable));
     }
 
-    public boolean updateItem(int itemId, String name, int userId, int category) {
-        return userService.updateItem(itemId, name, userId, category);
+    public boolean updateProduct(Product product, boolean available) {
+        return userService.updateProduct(product, available);
     }
 
-    public List<Item> getAllItems() {
-        return userService.getAllItems();
+    public List<Product> getAllProducts() {
+        return userService.getAllProducts();
     }
 
-    public List<Item> getItemsByUserId(int userId) {
-        return userService.getItemsByUserId(userId);
+    public List<Product> getAllProductsByUserId(int userId) {
+        return userService.getAllProductsByUserId(userId);
     }
 
-    public List<Item> getFilteredItems(String name, int category) {
-        return userService.getFilteredItems(name, category);
+    public List<Product> getAllProductsFiltered(String name, int category) {
+        return userService.getAllProductsFiltered(name, category);
     }
 
     public List<Category> getAllCategory() {
         return userService.getAllCategory();
     }
 
-    public void setNewExchange(int item_id_asked, int item_id_offered, Exchange.Status status, Date date_updated) {
-        userService.setNewExchange(new Exchange(item_id_asked, item_id_offered, status, date_updated));
+    public void setNewExchange(int productIdAsked, int productIdOffered, Status status) {
+        userService.setNewExchange(new Exchange(productIdAsked, productIdOffered, status));
     }
 
-    public boolean updateExchange(int exchangeId, Exchange.Status status, Date date_updated) {
-    return userService.updateExchange(new Exchange(exchangeId, status, date_updated));
+    public boolean updateExchange(Exchange exchange, Status status) {
+        return userService.updateExchange(exchange, status);
     }
 
-    public List<Exchange> getMyExchanges(int userId) {
-        return userService.getMyExchanges(userId);
+    public List<Exchange> getAllExchangesByUserId(int userId) {
+        return userService.getAllExchangesByUserId(userId);
     }
 }

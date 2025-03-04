@@ -3,38 +3,32 @@ package org.esiee.model;
 import java.util.Date;
 
 public class Exchange {
-    public enum Status {
-        Accepted,
-        Pending,
-        Denied
-    }
     private int id;
-    private int item_id_asked;
-    private int item_id_offered;
-    private Status status; // TODO : Enum
-    private Date date_created;
-    private Date date_updated;
+    private int productIdAsked;
+    private int productIdOffered;
+    private Status status;
+    private Date dateCreated;
+    private Date dateUpdated;
 
-    public Exchange(int id, int item_id_asked, int item_id_offered, Status status, Date date_created, Date date_updated) {
+    public Exchange(int id, int productIdAsked, int productIdOffered, Status status, Date dateCreated, Date dateUpdated) {
         this.id = id;
-        this.item_id_asked = item_id_asked;
-        this.item_id_offered = item_id_offered;
+        this.productIdAsked = productIdAsked;
+        this.productIdOffered = productIdOffered;
         this.status = status;
-        this.date_created = date_created;
-        this.date_updated = date_updated;
+        this.dateCreated = dateCreated;
+        this.dateUpdated = dateUpdated;
     }
 
-    public Exchange(int item_id_asked, int item_id_offered, Status status, Date date_updated) {
-        this.item_id_asked = item_id_asked;
-        this.item_id_offered = item_id_offered;
+    public Exchange(int productIdAsked, int productIdOffered, Status status) {
+        this.productIdAsked = productIdAsked;
+        this.productIdOffered = productIdOffered;
         this.status = status;
-        this.date_updated = date_updated;
     }
 
-    public Exchange(int id, Status status, Date date_updated) {
+    public Exchange(int id, Status status, Date dateUpdated) {
         this.id = id;
         this.status = status;
-        this.date_updated = date_updated;
+        this.dateUpdated = dateUpdated;
     }
 
     public int getId() {
@@ -45,20 +39,20 @@ public class Exchange {
         this.id = id;
     }
 
-    public int getItem_id_asked() {
-        return item_id_asked;
+    public int getProductIdAsked() {
+        return productIdAsked;
     }
 
-    public void setItem_id_asked(int item_id_asked) {
-        this.item_id_asked = item_id_asked;
+    public void setProductIdAsked(int productIdAsked) {
+        this.productIdAsked = productIdAsked;
     }
 
-    public int getItem_id_offered() {
-        return item_id_offered;
+    public int getProductIdOffered() {
+        return productIdOffered;
     }
 
-    public void setItem_id_offered(int item_id_offered) {
-        this.item_id_offered = item_id_offered;
+    public void setProductIdOffered(int productIdOffered) {
+        this.productIdOffered = productIdOffered;
     }
 
     public Status getStatus() {
@@ -69,19 +63,20 @@ public class Exchange {
         this.status = status;
     }
 
-    public Date getDate_created() {
-        return date_created;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setDate_created(Date date_created) {
-        this.date_created = date_created;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
-    public Date getDate_updated() {
-        return date_updated;
+    public Date getDateUpdated() {
+        return dateUpdated;
     }
 
-    public void setDate_updated(Date date_updated) {
-        this.date_updated = date_updated;
+    public void setDateUpdated(Date dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
+
 }

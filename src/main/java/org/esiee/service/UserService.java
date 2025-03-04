@@ -2,24 +2,22 @@ package org.esiee.service;
 
 import org.esiee.dao.CategoryDao;
 import org.esiee.dao.ExchangeDao;
-import org.esiee.dao.ItemDao;
+import org.esiee.dao.ProductDao;
 import org.esiee.dao.UserDao;
-import org.esiee.model.Exchange;
-import org.esiee.model.Item;
-import org.esiee.model.User;
-import org.esiee.model.Category;
+import org.esiee.model.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class UserService {
     private final UserDao userDao;
-    private final ItemDao itemDao;
+    private final ProductDao productDao;
     private final CategoryDao categoryDao;
     private final ExchangeDao exchangeDao;
 
-    public UserService(UserDao userDao, ItemDao itemDao, CategoryDao categoryDao, ExchangeDao exchangeDao) {
+    public UserService(UserDao userDao, ProductDao productDao, CategoryDao categoryDao, ExchangeDao exchangeDao) {
         this.userDao = userDao;
-        this.itemDao = itemDao;
+        this.productDao = productDao;
         this.categoryDao = categoryDao;
         this.exchangeDao = exchangeDao;
     }
@@ -39,24 +37,25 @@ public class UserService {
         return validUser;
     }
 
-    public void addItem(Item item) {
-        itemDao.save(item);
+    public void addProduct(Product product) {
+        productDao.save(product);
     }
 
-    public boolean updateItem(int itemId, String name, int userId, int category) {
-        return itemDao.update(new Item(itemId, name, userId, category));
+    public boolean updateProduct(Product product, boolean isAvailable) {
+        product.setAvailable(isAvailable);
+        return productDao.update(product);
     }
 
-    public List<Item> getAllItems() {
-        return itemDao.getAllItems();
+    public List<Product> getAllProducts() {
+        return productDao.getAllProducts();
     }
 
-    public List<Item> getItemsByUserId(int userId) {
-        return itemDao.getItemsByUserId(userId);
+    public List<Product> getAllProductsByUserId(int userId) {
+        return productDao.getProductByUserId(userId);
     }
 
-    public List<Item> getFilteredItems(String name, int category) {
-        return itemDao.getFilteredItems(name, category);
+    public List<Product> getAllProductsFiltered(String name, int category) {
+        return productDao.getFilteredProducts(name, category);
     }
 
     public List<Category> getAllCategory() {
@@ -67,11 +66,13 @@ public class UserService {
         exchangeDao.save(exchange);
     }
 
-    public boolean updateExchange(Exchange exchange) {
+    public boolean updateExchange(Exchange exchange, Status status) {
+        exchange.setStatus(Status.valueOf(status.toString()));
+        exchange.setDateUpdated(new Timestamp(System.currentTimeMillis()));
         return exchangeDao.update(exchange);
     }
 
-    public List<Exchange> getMyExchanges(int userId) {
+    public List<Exchange> getAllExchangesByUserId(int userId) {
         return exchangeDao.getExchangesByUserId(userId);
     }
 }

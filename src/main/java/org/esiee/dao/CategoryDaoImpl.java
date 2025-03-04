@@ -1,7 +1,6 @@
 package org.esiee.dao;
 
 import org.esiee.model.Category;
-import org.esiee.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
