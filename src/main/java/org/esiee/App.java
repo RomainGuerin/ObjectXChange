@@ -17,10 +17,10 @@ public class App {
     public static void main(String[] args) {
         // Initialize UserDao implementation
         UserDao userDao = new UserDaoImpl();
-        ItemDao itemDao = new ItemDaoImpl();
+        ProductDao productDao = new ProductDaoImpl();
         CategoryDao categoryDao = new CategoryDaoImpl();
         ExchangeDao exchangeDao = new ExchangeDaoImpl();
-        UserService userService = new UserService(userDao, itemDao, categoryDao, exchangeDao);
+        UserService userService = new UserService(userDao, productDao, categoryDao, exchangeDao);
         UserManager userManager = new UserManager(userService);
 
         // Register a new user
