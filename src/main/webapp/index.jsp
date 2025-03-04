@@ -335,7 +335,7 @@
               onclick="document.getElementById('modal_inscription').close()">
         ✕
       </button>
-      <form action="inscription" method="post">
+      <form action="register" method="post">
         <h1 class="font-semibold text-xl mb-4">Inscription</h1>
         <label class="input input-bordered flex items-center gap-2 mb-4">
           <svg
@@ -346,7 +346,7 @@
             <path
                     d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
           </svg>
-          <input type="text" class="grow" placeholder="Username" />
+          <input type="text" name="name" class="grow" placeholder="Username" />
         </label>
 
         <label class="input input-bordered flex items-center gap-2 mb-4">
