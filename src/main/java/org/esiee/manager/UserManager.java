@@ -6,6 +6,7 @@ import org.esiee.model.Item;
 import org.esiee.service.UserService;
 import org.esiee.model.User;
 
+import java.util.Date;
 import java.util.List;
 
 public class UserManager {
@@ -47,11 +48,11 @@ public class UserManager {
         return userService.getAllCategory();
     }
 
-    public void setNewExchange(int item_id_asked, int item_id_offered, String status, String date_updated) {
+    public void setNewExchange(int item_id_asked, int item_id_offered, Exchange.Status status, Date date_updated) {
         userService.setNewExchange(new Exchange(item_id_asked, item_id_offered, status, date_updated));
     }
 
-    public boolean updateExchange(int exchangeId, String status, String date_updated) {
+    public boolean updateExchange(int exchangeId, Exchange.Status status, Date date_updated) {
     return userService.updateExchange(new Exchange(exchangeId, status, date_updated));
     }
 
