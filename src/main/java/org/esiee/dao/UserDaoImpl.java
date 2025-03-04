@@ -23,6 +23,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public boolean update(User entity) {
+        return false;
+    }
+
+    @Override
     public User getByEmail(String email) {
         String query = "SELECT * FROM User WHERE email = ?";
         try (Connection con = DatabaseConnection.getConnection();
@@ -42,10 +47,5 @@ public class UserDaoImpl implements UserDao {
             throw new RuntimeException("Error getting user by email: " + e.getMessage(), e);
         }
         return null;
-    }
-
-    @Override
-    public boolean update(User entity) {
-        return false;
     }
 }

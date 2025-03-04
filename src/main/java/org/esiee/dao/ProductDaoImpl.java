@@ -9,16 +9,15 @@ import java.util.List;
 public class ProductDaoImpl implements ProductDao {
     @Override
     public void save(Product entity) {
-        String query = "INSERT INTO Product (name, description, date_created, image, user_id, category_id, is_available) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Product (name, description, images, user_id, category_id, availability) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, entity.getName());
             ps.setString(2, entity.getDescription());
-            ps.setDate(3, new Date(entity.getDateCreated().getTime())); //TODO : fix
-            ps.setString(4, entity.getImage());
-            ps.setInt(5, entity.getUserId());
-            ps.setInt(6, entity.getCategoryId());
-            ps.setBoolean(7, entity.isAvailable());
+            ps.setString(3, entity.getImage());
+            ps.setInt(4, entity.getUserId());
+            ps.setInt(5, entity.getCategoryId());
+            ps.setBoolean(6, entity.isAvailable());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error saving product: " + e.getMessage(), e);
@@ -27,7 +26,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public boolean update(Product entity) {
-        String query = "UPDATE Product SET is_available = ? WHERE id = ?";
+        String query = "UPDATE Product SET availability = ? WHERE id = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setBoolean(1, entity.isAvailable());
@@ -70,10 +69,10 @@ public class ProductDaoImpl implements ProductDao {
                         rs.getString("name"),
                         rs.getString("description"),
                         rs.getDate("date_created"),
-                        rs.getString("image"),
+                        rs.getString("images"),
                         rs.getInt("user_id"),
                         rs.getInt("category_id"),
-                        rs.getBoolean("is_available")
+                        rs.getBoolean("availability")
                 ));
             }
             return products;
@@ -82,7 +81,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getFilteredProducts(String name, int categoryId) {
-        String query = "SELECT * FROM Product WHERE name LIKE ? OR category = ?"; //TODO : AND or OR
+        String query = "SELECT * FROM Product WHERE name LIKE ? OR category_id = ?"; //TODO : AND or OR
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, "%" + name + "%");

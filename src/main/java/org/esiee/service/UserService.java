@@ -4,11 +4,9 @@ import org.esiee.dao.CategoryDao;
 import org.esiee.dao.ExchangeDao;
 import org.esiee.dao.ProductDao;
 import org.esiee.dao.UserDao;
-import org.esiee.model.Category;
-import org.esiee.model.Exchange;
-import org.esiee.model.Product;
-import org.esiee.model.User;
+import org.esiee.model.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class UserService {
@@ -43,8 +41,9 @@ public class UserService {
         productDao.save(product);
     }
 
-    public boolean updateProduct(int productId, boolean isAvailable) {
-        return productDao.update(new Product(productId, isAvailable));
+    public boolean updateProduct(Product product, boolean isAvailable) {
+        product.setAvailable(isAvailable);
+        return productDao.update(product);
     }
 
     public List<Product> getAllProducts() {
@@ -67,7 +66,9 @@ public class UserService {
         exchangeDao.save(exchange);
     }
 
-    public boolean updateExchange(Exchange exchange) {
+    public boolean updateExchange(Exchange exchange, Status status) {
+        exchange.setStatus(Status.valueOf(status.toString()));
+        exchange.setDateUpdated(new Timestamp(System.currentTimeMillis()));
         return exchangeDao.update(exchange);
     }
 

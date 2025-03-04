@@ -19,11 +19,10 @@ public class Exchange {
         this.dateUpdated = dateUpdated;
     }
 
-    public Exchange(int productIdAsked, int productIdOffered, Status status, Date dateUpdated) {
+    public Exchange(int productIdAsked, int productIdOffered, Status status) {
         this.productIdAsked = productIdAsked;
         this.productIdOffered = productIdOffered;
         this.status = status;
-        this.dateUpdated = dateUpdated;
     }
 
     public Exchange(int id, Status status, Date dateUpdated) {

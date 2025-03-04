@@ -23,10 +23,9 @@ public class Product {
         this.isAvailable = isAvailable;
     }
 
-    public Product(String name, String description, Date dateCreated, String image, int userId, int categoryId, boolean isAvailable) {
+    public Product(String name, String description, String image, int userId, int categoryId, boolean isAvailable) {
         this.name = name;
         this.description = description;
-        this.dateCreated = dateCreated;
         this.image = image;
         this.userId = userId;
         this.categoryId = categoryId;

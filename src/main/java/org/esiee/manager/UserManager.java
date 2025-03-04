@@ -3,7 +3,6 @@ package org.esiee.manager;
 import org.esiee.model.*;
 import org.esiee.service.UserService;
 
-import java.util.Date;
 import java.util.List;
 
 public class UserManager {
@@ -21,12 +20,12 @@ public class UserManager {
         return userService.loginUser(new User(email, password));
     }
 
-    public void addProduct(String name, String description, Date dateCreated, String image, int userId, int category, boolean isAvailable) {
-        userService.addProduct(new Product(name, description, dateCreated, image, userId, category, isAvailable));
+    public void addProduct(String name, String description, String image, int userId, int category, boolean isAvailable) {
+        userService.addProduct(new Product(name, description, image, userId, category, isAvailable));
     }
 
-    public boolean updateProduct(int productId, boolean available) {
-        return userService.updateProduct(productId, available);
+    public boolean updateProduct(Product product, boolean available) {
+        return userService.updateProduct(product, available);
     }
 
     public List<Product> getAllProducts() {
@@ -45,12 +44,12 @@ public class UserManager {
         return userService.getAllCategory();
     }
 
-    public void setNewExchange(int productIdAsked, int productIdOffered, Status status, Date dateUpdated) {
-        userService.setNewExchange(new Exchange(productIdAsked, productIdOffered, status, dateUpdated));
+    public void setNewExchange(int productIdAsked, int productIdOffered, Status status) {
+        userService.setNewExchange(new Exchange(productIdAsked, productIdOffered, status));
     }
 
-    public boolean updateExchange(int exchangeId, Status status, Date dateUpdated) {
-        return userService.updateExchange(new Exchange(exchangeId, status, dateUpdated));
+    public boolean updateExchange(Exchange exchange, Status status) {
+        return userService.updateExchange(exchange, status);
     }
 
     public List<Exchange> getAllExchangesByUserId(int userId) {
