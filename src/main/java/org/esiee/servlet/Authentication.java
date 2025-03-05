@@ -1,17 +1,16 @@
 package org.esiee.servlet;
 
-import org.esiee.dao.UserDao;
-import org.esiee.dao.UserDaoImpl;
-import org.esiee.manager.UserManager;
-import org.esiee.model.User;
-import org.esiee.services.UserService;
-
-import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.esiee.dao.*;
+import org.esiee.manager.UserManager;
+import org.esiee.model.User;
+import org.esiee.service.UserService;
+
+import java.io.IOException;
 
 @WebServlet({"/register", "/login"})
 public class Authentication extends HttpServlet {
@@ -21,7 +20,10 @@ public class Authentication extends HttpServlet {
         String password = request.getParameter("password");
 
         UserDao userDao = new UserDaoImpl();
-        UserService userService = new UserService(userDao);
+        ProductDao productDao = new ProductDaoImpl();
+        CategoryDao categoryDao = new CategoryDaoImpl();
+        ExchangeDao exchangeDao = new ExchangeDaoImpl();
+        UserService userService = new UserService(userDao, productDao, categoryDao, exchangeDao);
         UserManager userManager = new UserManager(userService);
 
         if ("/register".equals(action)) {
