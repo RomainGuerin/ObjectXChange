@@ -11,6 +11,7 @@ public class DatabaseConnection {
     private DatabaseConnection() {};
 
     public static Connection getConnection() {
+        System.out.println(System.getProperty("user.dir") + "/database.db");
         try {
             if (connection == null || connection.isClosed()) {
                 Class.forName("org.sqlite.JDBC");
