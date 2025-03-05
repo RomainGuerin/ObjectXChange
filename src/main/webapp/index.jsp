@@ -114,7 +114,7 @@
   </dialog>
 
   <dialog id="modal_product_client" class="modal">
-    <div class="modal-box w-11/12 max-w-5xl">
+    <div class="modal-box w-11/12 max-w-5xl max-h-[80vh] overflow-y-auto">
       <h3 class="text-lg font-bold mb-4">Mes produits</h3>
       <div class="overflow-x-auto">
         <table class="table">
@@ -147,6 +147,7 @@
       </div>
     </div>
   </dialog>
+
 
   <dialog id="modal_connexion" class="modal">
     <div class="modal-box relative">
