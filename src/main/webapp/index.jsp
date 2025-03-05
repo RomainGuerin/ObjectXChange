@@ -17,7 +17,7 @@
 
 <div class="navbar bg-base-100 mb-8">
   <div class="flex-1">
-    <a class="btn btn-ghost">
+    <a class="ml-4" href="/index.jsp">
       <img src="images/logo.png" alt="Logo ObjectXChange" class="h-10">
     </a>
   </div>
