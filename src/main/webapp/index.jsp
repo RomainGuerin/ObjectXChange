@@ -11,7 +11,7 @@
 <html data-theme="emerald">
 <head>
   <title>ObjectXChange</title>
-  <link rel="icon" type="image/png" href="/images/icon.png">
+  <link rel="icon" type="image/x-icon" href="/images/icon.ico">
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,9 +76,11 @@
             <div class="badge">Catégorie ID: ${product.categoryId}</div>
           </h2>
           <p>${product.description}</p>
+          <c:if test="${not empty sessionScope.user}">
           <div class="card-actions justify-end mt-4">
             <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
           </div>
+          </c:if>
         </div>
       </div>
     </c:forEach>
