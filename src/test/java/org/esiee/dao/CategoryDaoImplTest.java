@@ -1,7 +1,9 @@
 package org.esiee.dao;
 
 import org.esiee.model.Category;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import java.sql.Connection;
@@ -10,11 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-class ITCategoryDaoImpl {
+class CategoryDaoImplTest {
     private CategoryDaoImpl categoryDao;
     private PreparedStatement mockPreparedStatement;
     private ResultSet mockResultSet;

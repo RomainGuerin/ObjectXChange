@@ -3,7 +3,6 @@ package org.esiee.manager;
 import org.esiee.model.*;
 import org.esiee.service.UserService;
 
-import java.util.Date;
 import java.util.List;
 
 public class UserManager {

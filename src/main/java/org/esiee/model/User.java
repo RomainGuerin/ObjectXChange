@@ -1,23 +1,25 @@
 package org.esiee.model;
 
-/**
- * Represents a User in the system.
- */
+import java.util.regex.Pattern;
+
 public class User {
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+    private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,20}$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
+
     private int id;
     private String name;
     private String email;
     private String password;
 
-    /**
-     * Constructs a new User with the specified id, name, email and password.
-     *
-     * @param id       the id of the user
-     * @param name     the name of the user
-     * @param email    the email of the user
-     * @param password the password of the user
-     */
     public User(int id, String name, String email, String password) {
+        if (!isValidEmail(email)) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
+        if (!isValidPassword(password)) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long and include a number, a lowercase letter, an uppercase letter, and a special character");
+        }
         this.id = id;
         this.name = name;
         this.email = email;
@@ -25,85 +27,56 @@ public class User {
     }
 
     public User(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
+        this(0, name, email, password);
     }
 
     public User(String email, String password) {
-        this.email = email;
-        this.password = password;
+        this(0, null, email, password);
     }
 
-    /**
-     * Gets the id of the user.
-     *
-     * @return the id of the user
-     */
     public int getId() {
         return id;
     }
 
-    /**
-     * Gets the name of the user.
-     *
-     * @return the name of the user
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Gets the email of the user.
-     *
-     * @return the email of the user
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * Gets the password of the user.
-     *
-     * @return the password of the user
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Sets the id of the user.
-     *
-     * @param id the new id of the user
-     */
     public void setId(int id) {
         this.id = id;
     }
 
-    /**
-     * Sets the name of the user.
-     *
-     * @param name the new name of the user
-     */
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * Sets the email of the user.
-     *
-     * @param email the new email of the user
-     */
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
+        if (!isValidEmail(email)) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
         this.email = email;
     }
 
-    /**
-     * Sets the password of the user.
-     *
-     * @param password the new password of the user
-     */
+    public String getPassword() {
+        return password;
+    }
+
     public void setPassword(String password) {
+        if (!isValidPassword(password)) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long and include a number, a lowercase letter, and an uppercase letter");
+        }
         this.password = password;
+    }
+
+    private boolean isValidEmail(String email) {
+        return EMAIL_PATTERN.matcher(email).matches();
+    }
+
+    private boolean isValidPassword(String password) {
+        return PASSWORD_PATTERN.matcher(password).matches();
     }
 }

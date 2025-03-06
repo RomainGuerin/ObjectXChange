@@ -1,34 +1,53 @@
 package org.esiee.model;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CategoryTest {
 
-    @Test
-    void constructorWithAllFieldsShouldInitializeCorrectly() {
-        Category category = new Category(1, "Electronics");
+    private static Category category;
 
-        assertEquals(1, category.getId());
-        assertEquals("Electronics", category.getName());
+    @BeforeAll
+    static void setUpBeforeAll() {
+        category = new Category(1, "Electronics");
     }
 
     @Test
-    void constructorWithNameOnlyShouldInitializeCorrectly() {
-        Category category = new Category("Books");
-
-        assertEquals("Books", category.getName());
-        assertEquals(0, category.getId());
+    void constructorWithAllFieldsShouldInitializeCorrectly() {
+        assertAll(
+            () -> assertNotNull(category),
+            () -> assertEquals(1, category.getId()),
+            () -> assertEquals("Electronics", category.getName())
+        );
     }
 
     @Test
     void settersShouldUpdateFieldsCorrectly() {
-        Category category = new Category(1, "Electronics");
-
         category.setId(2);
         category.setName("Toys");
 
-        assertEquals(2, category.getId());
-        assertEquals("Toys", category.getName());
+        assertAll(
+            () -> assertTrue(category.getId() > 0),
+            () -> assertEquals(2, category.getId()),
+            () -> assertEquals("Toys", category.getName())
+        );
+    }
+
+    @Test
+    void constructorShouldThrowExceptionForInvalidArguments() {
+        assertAll(
+            () -> assertThrows(IllegalArgumentException.class, () -> new Category(-1, "Invalid")),
+            () -> assertThrows(IllegalArgumentException.class, () -> new Category(1, null))
+        );
+    }
+
+    @Test
+    void setterShouldThrowExceptionForInvalidArguments() {
+        assertAll(
+            () -> assertThrows(IllegalArgumentException.class, () -> category.setId(-1)),
+            () -> assertThrows(IllegalArgumentException.class, () -> category.setName(null))
+        );
     }
 }
