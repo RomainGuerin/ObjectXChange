@@ -81,11 +81,20 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getFilteredProducts(String name, int categoryId) {
-        String query = "SELECT * FROM Product WHERE name LIKE ? OR category_id = ?"; //TODO : AND or OR
+        String query = "SELECT * FROM Product WHERE name LIKE ?";
+
+        if (categoryId > 0) {
+            query += " AND category_id = ?";
+        }
+
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, "%" + name + "%");
-            ps.setInt(2, categoryId);
+
+            if (categoryId > 0) {
+                ps.setInt(2, categoryId);
+            }
+
             return getProduct(ps);
         } catch (SQLException e) {
             throw new RuntimeException("Error getting filtered products: " + e.getMessage(), e);

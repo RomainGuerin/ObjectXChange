@@ -53,12 +53,16 @@
 <div class="mx-6">
   <div class="mb-6 flex items-center">
     <div class="font-semibold text-xl">Liste objets</div>
-    <select class="ml-4 mr-4 select select-bordered w-full max-w-xs">
-      <option disabled selected>Toutes les catégories</option>
-      <c:forEach var="category" items="${categoryList}">
-        <option value="${category.id}">${category.name}</option>
-      </c:forEach>
-    </select>
+    <form action="${pageContext.request.contextPath}/products" method="get" class="flex items-center gap-4 mb-6">
+      <input type="text" name="name" placeholder="Rechercher un produit..." class="input input-bordered w-full max-w-xs" value="${param.name}">
+      <select name="categoryId" class="select select-bordered w-full max-w-xs">
+        <option value="">Toutes les catégories</option>
+        <c:forEach var="category" items="${categoryList}">
+          <option value="${category.id}" ${param.categoryId == category.id ? 'selected' : ''}>${category.name}</option>
+        </c:forEach>
+      </select>
+      <button type="submit" class="btn btn-primary">Filtrer</button>
+    </form>
     <c:if test="${not empty sessionScope.user}">
       <button onclick="modal_add_object.showModal()" class="ml-auto btn btn-neutral">Ajouter un objet</button>
     </c:if>
