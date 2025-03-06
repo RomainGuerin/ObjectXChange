@@ -6,42 +6,29 @@ import static org.junit.jupiter.api.Assertions.*;
 class CategoryTest {
 
     @Test
-    void constructorWithIdAndNameShouldSetFieldsCorrectly() {
+    void constructorWithAllFieldsShouldInitializeCorrectly() {
         Category category = new Category(1, "Electronics");
+
         assertEquals(1, category.getId());
         assertEquals("Electronics", category.getName());
     }
 
     @Test
-    void constructorWithNameShouldSetNameFieldCorrectly() {
+    void constructorWithNameOnlyShouldInitializeCorrectly() {
         Category category = new Category("Books");
+
         assertEquals("Books", category.getName());
-    }
-
-    @Test
-    void setIdShouldUpdateIdField() {
-        Category category = new Category(1, "Electronics");
-        category.setId(2);
-        assertEquals(2, category.getId());
-    }
-
-    @Test
-    void setNameShouldUpdateNameField() {
-        Category category = new Category(1, "Electronics");
-        category.setName("Books");
-        assertEquals("Books", category.getName());
-    }
-
-    @Test
-    void constructorWithNameShouldSetIdToDefaultValue() {
-        Category category = new Category("Books");
         assertEquals(0, category.getId());
     }
 
     @Test
-    void setNameShouldHandleNullValue() {
+    void settersShouldUpdateFieldsCorrectly() {
         Category category = new Category(1, "Electronics");
-        category.setName(null);
-        assertNull(category.getName());
+
+        category.setId(2);
+        category.setName("Toys");
+
+        assertEquals(2, category.getId());
+        assertEquals("Toys", category.getName());
     }
 }

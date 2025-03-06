@@ -1,91 +1,67 @@
-//package org.esiee.model;
-//
-//import org.junit.jupiter.api.Test;
-//import static org.junit.jupiter.api.Assertions.*;
-//import java.util.Date;
-//
-//class ExchangeTest {
-//
-//    @Test
-//    void constructorWithAllFieldsShouldSetFieldsCorrectly() {
-//        Date dateCreated = new Date();
-//        Date dateUpdated = new Date();
-//        Exchange exchange = new Exchange(1, 101, 202, Exchange.Status.Pending, dateCreated, dateUpdated);
-//        assertEquals(1, exchange.getId());
-//        assertEquals(101, exchange.getItem_id_asked());
-//        assertEquals(202, exchange.getItem_id_offered());
-//        assertEquals(Exchange.Status.Pending, exchange.getStatus());
-//        assertEquals(dateCreated, exchange.getDate_created());
-//        assertEquals(dateUpdated, exchange.getDate_updated());
-//    }
-//
-//    @Test
-//    void constructorWithoutIdAndDateCreatedShouldSetFieldsCorrectly() {
-//        Date dateUpdated = new Date();
-//        Exchange exchange = new Exchange(101, 202, Exchange.Status.Pending, dateUpdated);
-//        assertEquals(101, exchange.getItem_id_asked());
-//        assertEquals(202, exchange.getItem_id_offered());
-//        assertEquals(Exchange.Status.Pending, exchange.getStatus());
-//        assertEquals(dateUpdated, exchange.getDate_updated());
-//    }
-//
-//    @Test
-//    void constructorWithIdStatusAndDateUpdatedShouldSetFieldsCorrectly() {
-//        Date dateUpdated = new Date();
-//        Exchange exchange = new Exchange(1, Exchange.Status.Pending, dateUpdated);
-//        assertEquals(1, exchange.getId());
-//        assertEquals(Exchange.Status.Pending, exchange.getStatus());
-//        assertEquals(dateUpdated, exchange.getDate_updated());
-//    }
-//
-//    @Test
-//    void setIdShouldUpdateIdField() {
-//        Exchange exchange = new Exchange(1, 101, 202, Exchange.Status.Pending, new Date(), new Date());
-//        exchange.setId(2);
-//        assertEquals(2, exchange.getId());
-//    }
-//
-//    @Test
-//    void setItemIdAskedShouldUpdateItemIdAskedField() {
-//        Exchange exchange = new Exchange(1, 101, 202, Exchange.Status.Pending, new Date(), new Date());
-//        exchange.setItem_id_asked(102);
-//        assertEquals(102, exchange.getItem_id_asked());
-//    }
-//
-//    @Test
-//    void setItemIdOfferedShouldUpdateItemIdOfferedField() {
-//        Exchange exchange = new Exchange(1, 101, 202, Exchange.Status.Pending, new Date(), new Date());
-//        exchange.setItem_id_offered(203);
-//        assertEquals(203, exchange.getItem_id_offered());
-//    }
-//
-//    @Test
-//    void setStatusShouldUpdateStatusField() {
-//        Exchange exchange = new Exchange(1, 101, 202, Exchange.Status.Pending, new Date(), new Date());
-//        exchange.setStatus(Exchange.Status.Accepted);
-//        assertEquals(Exchange.Status.Accepted, exchange.getStatus());
-//    }
-//
-//    @Test
-//    void setDateCreatedShouldUpdateDateCreatedField() {
-//        Date newDateCreated = new Date();
-//        Exchange exchange = new Exchange(1, 101, 202, Exchange.Status.Pending, new Date(), new Date());
-//        exchange.setDate_created(newDateCreated);
-//        assertEquals(newDateCreated, exchange.getDate_created());
-//    }
-//
-//    @Test
-//    void setDateUpdatedShouldUpdateDateUpdatedField() {
-//        Date newDateUpdated = new Date();
-//        Exchange exchange = new Exchange(1, 101, 202, Exchange.Status.Pending, new Date(), new Date());
-//        exchange.setDate_updated(newDateUpdated);
-//        assertEquals(newDateUpdated, exchange.getDate_updated());
-//    }
-//
-//    @Test
-//    void setStatusShouldHandleNullValue() {
-//        Exchange exchange = new Exchange(1, 101, 202, Exchange.Status.Pending, new Date(), new Date());
-//        exchange.setStatus(null);
-//        assertNull(exchange.getStatus());
-//    }
-//}
+package org.esiee.model;
+
+import org.junit.jupiter.api.Test;
+import java.util.Date;
+import static org.junit.jupiter.api.Assertions.*;
+import org.esiee.model.Status.*;
+
+class ExchangeTest {
+
+    @Test
+    void constructorWithAllFieldsShouldInitializeCorrectly() {
+        Date now = new Date();
+        Exchange exchange = new Exchange(1, 2, 3, Status.Pending, now, now);
+
+        assertEquals(1, exchange.getId());
+        assertEquals(2, exchange.getProductIdAsked());
+        assertEquals(3, exchange.getProductIdOffered());
+        assertEquals(Status.Pending, exchange.getStatus());
+        assertEquals(now, exchange.getDateCreated());
+        assertEquals(now, exchange.getDateUpdated());
+    }
+
+    @Test
+    void constructorWithoutIdAndDatesShouldInitializeCorrectly() {
+        Exchange exchange = new Exchange(2, 3, Status.Pending);
+
+        assertEquals(2, exchange.getProductIdAsked());
+        assertEquals(3, exchange.getProductIdOffered());
+        assertEquals(Status.Pending, exchange.getStatus());
+        assertNull(exchange.getDateCreated());
+        assertNull(exchange.getDateUpdated());
+    }
+
+    @Test
+    void constructorWithIdStatusAndDateUpdatedShouldInitializeCorrectly() {
+        Date now = new Date();
+        Exchange exchange = new Exchange(1, Status.Pending, now);
+
+        assertEquals(1, exchange.getId());
+        assertEquals(Status.Pending, exchange.getStatus());
+        assertEquals(now, exchange.getDateUpdated());
+        assertEquals(0, exchange.getProductIdAsked());
+        assertEquals(0, exchange.getProductIdOffered());
+        assertNull(exchange.getDateCreated());
+    }
+
+    @Test
+    void settersShouldUpdateFieldsCorrectly() {
+        Date now = new Date();
+        Exchange exchange = new Exchange(1, 2, 3, Status.Pending, now, now);
+
+        exchange.setId(10);
+        exchange.setProductIdAsked(20);
+        exchange.setProductIdOffered(30);
+        exchange.setStatus(Status.Accepted);
+        Date newDate = new Date();
+        exchange.setDateCreated(newDate);
+        exchange.setDateUpdated(newDate);
+
+        assertEquals(10, exchange.getId());
+        assertEquals(20, exchange.getProductIdAsked());
+        assertEquals(30, exchange.getProductIdOffered());
+        assertEquals(Status.Accepted, exchange.getStatus());
+        assertEquals(newDate, exchange.getDateCreated());
+        assertEquals(newDate, exchange.getDateUpdated());
+    }
+}
