@@ -275,26 +275,26 @@
   </c:if>
 </div>
 
-<!-- Script pour masquer les toasts après 5 secondes -->
+<!-- Script pour masquer les toasts après 3 secondes -->
 <script>
-  // Masquer le toast de succès après 5 secondes
+  // Masquer le toast de succès après 3 secondes
   const successToast = document.getElementById('successToast');
   if (successToast) {
     setTimeout(() => {
       successToast.classList.add('hide');
       // Supprimer l'élément du DOM après l'animation
       setTimeout(() => successToast.remove(), 500); // 500 ms = durée de l'animation
-    }, 3000); // 5000 ms = 5 secondes
+    }, 3000); // 3000 ms = 3 secondes
   }
 
-  // Masquer le toast d'erreur après 5 secondes
+  // Masquer le toast d'erreur après 3 secondes
   const errorToast = document.getElementById('errorToast');
   if (errorToast) {
     setTimeout(() => {
       errorToast.classList.add('hide');
       // Supprimer l'élément du DOM après l'animation
       setTimeout(() => errorToast.remove(), 500); // 500 ms = durée de l'animation
-    }, 3000); // 5000 ms = 5 secondes
+    }, 3000); // 5000 ms = 3 secondes
   }
 </script>
 
