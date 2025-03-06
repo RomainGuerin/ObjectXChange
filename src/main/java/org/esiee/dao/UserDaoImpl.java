@@ -23,7 +23,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getById(int id) { return null; }
+    public boolean update(User entity) {
+        return false;
+    }
 
     @Override
     public User getByEmail(String email) {
@@ -45,15 +47,5 @@ public class UserDaoImpl implements UserDao {
             throw new RuntimeException("Error getting user by email: " + e.getMessage(), e);
         }
         return null;
-    }
-
-    @Override
-    public boolean update(User entity) {
-        return false;
-    }
-
-    @Override
-    public boolean delete(User entity) {
-        return false;
     }
 }
