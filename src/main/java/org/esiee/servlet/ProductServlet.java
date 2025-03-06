@@ -6,61 +6,82 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.esiee.dao.ProductDao;
+import org.esiee.dao.CategoryDaoImpl;
+import org.esiee.dao.ExchangeDaoImpl;
 import org.esiee.dao.ProductDaoImpl;
+import org.esiee.dao.UserDaoImpl;
+import org.esiee.manager.UserManager;
+import org.esiee.model.Category;
 import org.esiee.model.Product;
 import org.esiee.model.User;
+import org.esiee.service.UserService;
 
 import java.io.IOException;
 import java.util.List;
+
 @WebServlet("/products/*")
 public class ProductServlet extends HttpServlet {
-    private ProductDao productDao = new ProductDaoImpl();
+    private final UserManager userManager;
 
-    @Override
+    public ProductServlet() {
+        UserService userService = new UserService(new UserDaoImpl(), new ProductDaoImpl(), new CategoryDaoImpl(), new ExchangeDaoImpl());
+        this.userManager = new UserManager(userService);
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
+        List<Category> categoryList = userManager.getAllCategory();
+        request.setAttribute("categoryList", categoryList);
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            // Récupérer les paramètres du filtre
-            String nameFilter = request.getParameter("name");
-            String categoryFilter = request.getParameter("categoryId");
-            int categoryId = (categoryFilter != null && !categoryFilter.isEmpty()) ? Integer.parseInt(categoryFilter) : -1;
-
-            // Récupérer les produits filtrés
-            List<Product> productList = productDao.getFilteredProducts(nameFilter, categoryId);
-            request.setAttribute("productList", productList);
-
-            // Rediriger vers la page d'affichage
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            handleProductList(request, response);
+        } else if (pathInfo.equals("/user")) {
+            handleUserProducts(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    private void handleProductList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Ajouter un produit
+        String nameFilter = request.getParameter("name");
+        String categoryFilter = request.getParameter("categoryId");
+        int categoryId = (categoryFilter != null && !categoryFilter.isEmpty()) ? Integer.parseInt(categoryFilter) : -1;
+
+        List<Product> productList = userManager.getAllProductsFiltered(nameFilter, categoryId);
+        request.setAttribute("productList", productList);
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
+    }
+
+    private void handleUserProducts(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
+            return;
+        }
+        List<Product> productList = userManager.getAllProductsByUserId(user.getId());
+        request.setAttribute("productList", productList);
+        request.getRequestDispatcher("/myProducts.jsp").forward(request, response);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
             return;
         }
 
-        // Récupérer les données du formulaire
         String name = request.getParameter("name");
         String description = request.getParameter("description");
         String image = request.getParameter("image");
         int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 
-        // Créer et enregistrer le produit
-        Product product = new Product(name, description, image, user.getId(), categoryId, true);
-        productDao.save(product);
+        userManager.addProduct(name, description, image, user.getId(), categoryId, true);
 
-        // Rediriger vers la liste des produits de l'utilisateur
         response.sendRedirect(request.getContextPath() + "/products/user");
     }
 }

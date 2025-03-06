@@ -39,7 +39,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getAllProducts() {
-        String query = "SELECT * FROM Product";
+        String query = "SELECT * FROM Product ORDER BY date_created DESC";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             return getProduct(ps);
@@ -50,7 +50,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getProductByUserId(int userId) {
-        String query = "SELECT * FROM Product WHERE user_id = ?";
+        String query = "SELECT * FROM Product WHERE user_id = ? ORDER BY date_created DESC";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, userId);
@@ -86,6 +86,8 @@ public class ProductDaoImpl implements ProductDao {
         if (categoryId > 0) {
             query += " AND category_id = ?";
         }
+
+        query += " ORDER BY date_created DESC";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {

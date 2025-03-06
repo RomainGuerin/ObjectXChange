@@ -1,56 +1,50 @@
 package org.esiee.servlet;
 
-import org.esiee.dao.*;
-
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.esiee.dao.CategoryDaoImpl;
+import org.esiee.dao.ExchangeDaoImpl;
+import org.esiee.dao.ProductDaoImpl;
+import org.esiee.dao.UserDaoImpl;
+import org.esiee.manager.UserManager;
 import org.esiee.model.Category;
 import org.esiee.model.Product;
-
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
 import org.esiee.model.User;
+import org.esiee.service.UserService;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.esiee.service.UserService;
-
 @WebServlet("/")
 public class HomeServlet extends HttpServlet {
-    private UserService userService; // Utilisation de UserService
+    private final UserManager userManager;
 
-    @Override
-    public void init() throws ServletException {
-        // Initialisation du UserService avec les DAOs nécessaires
-        this.userService = new UserService(
-                new UserDaoImpl(),      // DAO pour les utilisateurs
-                new ProductDaoImpl(),    // DAO pour les produits
-                new CategoryDaoImpl(),   // DAO pour les catégories
-                new ExchangeDaoImpl()    // DAO pour les échanges
-        );
+    public HomeServlet() {
+        UserService userService = new UserService(new UserDaoImpl(), new ProductDaoImpl(), new CategoryDaoImpl(), new ExchangeDaoImpl());
+        this.userManager = new UserManager(userService);
     }
 
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Récupérer tous les produits via UserService
-        List<Product> productList = userService.getAllProducts();
+        List<Product> productList = userManager.getAllProducts();
         request.setAttribute("productList", productList);
 
-        // Récupérer toutes les catégories via UserService
-        List<Category> categoryList = userService.getAllCategory();
+        List<Category> categoryList = userManager.getAllCategory();
         request.setAttribute("categoryList", categoryList);
 
-        // Récupérer les produits de l'utilisateur connecté via UserService
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user != null) {
-            List<Product> userProductList = userService.getAllProductsByUserId(user.getId());
+            List<Product> userProductList = userManager.getAllProductsByUserId(user.getId());
             request.setAttribute("userProductList", userProductList);
         }
 
-        // Transférer à la JSP
         RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
         dispatcher.forward(request, response);
     }

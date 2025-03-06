@@ -17,9 +17,7 @@
 
 <div class="navbar bg-base-100 mb-8">
     <div class="flex-1">
-        <a class="ml-4" href="/">
-            <img src="images/logo.png" alt="Logo ObjectXChange" class="h-10">
-        </a>
+        <a href="${pageContext.request.contextPath}" class="btn btn-ghost text-xl">Object<span class="text-primary">X</span>Change</a>
     </div>
     <div class="flex-none">
         <ul class="menu menu-horizontal px-1">
@@ -29,12 +27,12 @@
                         <div class="dropdown">
                             <div tabindex="0" role="button" class="btn btn-ghost m-1">Bienvenue, ${sessionScope.user.name}</div>
                             <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                <li><a href="/products/user">Mes produits</a></li>
-                                <li><a href="/exchange.jsp">Mes échanges</a></li>
+                                <li><a href="${pageContext.request.contextPath}/products/user">Mes produits</a></li>
+                                <li><a href="${pageContext.request.contextPath}/exchange.jsp">Mes échanges</a></li>
                             </ul>
                         </div>
                         <div>
-                            <li><a class="ml-2 btn btn-outline btn-error" href="/logout">Déconnexion</a></li>
+                            <li><a class="ml-2 btn btn-outline btn-error" href="${pageContext.request.contextPath}/logout">Déconnexion</a></li>
                         </div>
                     </div>
                 </c:when>

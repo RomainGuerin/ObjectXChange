@@ -11,7 +11,7 @@
 <html data-theme="emerald">
 <head>
   <title>ObjectXChange</title>
-  <link rel="icon" type="image/x-icon" href="/images/icon.ico">
+  <link rel="icon" type="image/x-icon" href="images/icon.ico">
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,9 +20,7 @@
 
 <div class="navbar bg-base-100 mb-8">
   <div class="flex-1">
-    <a class="ml-4" href="/">
-      <img src="images/logo.png" alt="Logo ObjectXChange" class="h-10">
-    </a>
+    <a href="${pageContext.request.contextPath}" class="btn btn-ghost text-xl">Object<span class="text-primary">X</span>Change</a>
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
@@ -32,12 +30,12 @@
           <div class="dropdown">
             <div tabindex="0" role="button" class="btn btn-ghost m-1">Bienvenue, ${sessionScope.user.name}</div>
             <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-              <li><a href="/products/user">Mes produits</a></li>
-              <li><a href="/exchange.jsp">Mes échanges</a></li>
+              <li><a href="${pageContext.request.contextPath}/products/user">Mes produits</a></li>
+              <li><a href="${pageContext.request.contextPath}/exchange.jsp">Mes échanges</a></li>
             </ul>
           </div>
           <div>
-            <li><a class="ml-2 btn btn-outline btn-error" href="/logout">Déconnexion</a></li>
+            <li><a class="ml-2 btn btn-outline btn-error" href="${pageContext.request.contextPath}/logout">Déconnexion</a></li>
           </div>
           </div>
         </c:when>
@@ -51,7 +49,7 @@
 </div>
 
 <div class="mx-6">
-  <div class="mb-6 flex items-center">
+  <div class="mb-6 flex items-center justify-between align-center">
     <div class="font-semibold text-xl">Liste objets</div>
     <form action="${pageContext.request.contextPath}/products" method="get" class="flex items-center gap-4 mb-6">
       <input type="text" name="name" placeholder="Rechercher un produit..." class="input input-bordered w-full max-w-xs" value="${param.name}">
@@ -63,12 +61,14 @@
       </select>
       <button type="submit" class="btn btn-primary">Filtrer</button>
     </form>
+  </div>
+  <div class="flex justify-end mb-4">
     <c:if test="${not empty sessionScope.user}">
-      <button onclick="modal_add_object.showModal()" class="ml-auto btn btn-neutral">Ajouter un objet</button>
+      <button onclick="modal_add_object.showModal()" class="btn btn-neutral">Ajouter un objet</button>
     </c:if>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-4">
     <c:forEach var="product" items="${productList}">
       <div class="card card-compact bg-base-100 shadow-xl">
         <figure>
