@@ -5,11 +5,13 @@
   Time: 15:31
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html data-theme="emerald">
 <head>
   <title>ObjectXChange</title>
+  <link rel="icon" type="image/x-icon" href="/images/icon.ico">
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,14 +20,32 @@
 
 <div class="navbar bg-base-100 mb-8">
   <div class="flex-1">
-    <a class="btn btn-ghost">
+    <a class="ml-4" href="/">
       <img src="images/logo.png" alt="Logo ObjectXChange" class="h-10">
     </a>
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
-      <li><button class="btn btn-ghost" onclick="modal_connexion.showModal()">Connexion</button></li>
-      <li><button class="ml-2 btn btn-outline" onclick="modal_inscription.showModal()">Inscription</button></li>
+      <c:choose>
+        <c:when test="${not empty sessionScope.user}">
+          <div class="flex items-center">
+          <div class="dropdown">
+            <div tabindex="0" role="button" class="btn btn-ghost m-1">Bienvenue, ${sessionScope.user.name}</div>
+            <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+              <li><a href="/products/user">Mes produits</a></li>
+              <li><a href="/exchange.jsp">Mes échanges</a></li>
+            </ul>
+          </div>
+          <div>
+            <li><a class="ml-2 btn btn-outline btn-error" href="/logout">Déconnexion</a></li>
+          </div>
+          </div>
+        </c:when>
+        <c:otherwise>
+          <li><button class="btn btn-ghost" onclick="modal_connexion.showModal()">Connexion</button></li>
+          <li><button class="ml-2 btn btn-outline" onclick="modal_inscription.showModal()">Inscription</button></li>
+        </c:otherwise>
+      </c:choose>
     </ul>
   </div>
 </div>
@@ -35,94 +55,36 @@
     <div class="font-semibold text-xl">Liste objets</div>
     <select class="ml-4 mr-4 select select-bordered w-full max-w-xs">
       <option disabled selected>Toutes les catégories</option>
-      <option>Catégorie 1</option>
-      <option>Catégorie 2</option>
+      <c:forEach var="category" items="${categoryList}">
+        <option value="${category.id}">${category.name}</option>
+      </c:forEach>
     </select>
-    <button onclick="modal_add_object.showModal()" class="ml-auto btn btn-neutral">Ajouter un objet</button>
+    <c:if test="${not empty sessionScope.user}">
+      <button onclick="modal_add_object.showModal()" class="ml-auto btn btn-neutral">Ajouter un objet</button>
+    </c:if>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-    <div class="card card-compact bg-base-100 shadow-xl">
-      <figure>
-        <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
-      </figure>
-      <div class="card-body">
-        <h2 class="card-title">Produit 1<div class="badge">Décoration</div></h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div class="card-actions justify-end mt-4">
-          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
+    <c:forEach var="product" items="${productList}">
+      <div class="card card-compact bg-base-100 shadow-xl">
+        <figure>
+          <img src="${product.image}" alt="${product.name}" class="w-full h-52 object-cover"/>
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title">
+              ${product.name}
+            <div class="badge">Catégorie ID: ${product.categoryId}</div>
+          </h2>
+          <p>${product.description}</p>
+          <c:if test="${not empty sessionScope.user}">
+          <div class="card-actions justify-end mt-4">
+            <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
+          </div>
+          </c:if>
         </div>
       </div>
-    </div>
-
-    <div class="card card-compact bg-base-100 shadow-xl">
-      <figure>
-        <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
-      </figure>
-      <div class="card-body">
-        <h2 class="card-title">Produit 2<div class="badge">Décoration</div></h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div class="card-actions justify-end">
-          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="card card-compact bg-base-100 shadow-xl">
-      <figure>
-        <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
-      </figure>
-      <div class="card-body">
-        <h2 class="card-title">Produit 3<div class="badge">Décoration</div></h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div class="card-actions justify-end">
-          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
-        </div>
-      </div>
-    </div>
+    </c:forEach>
   </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div class="card card-compact bg-base-100 shadow-xl">
-      <figure>
-        <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
-      </figure>
-      <div class="card-body">
-        <h2 class="card-title">Produit 1<div class="badge">Décoration</div></h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div class="card-actions justify-end mt-4">
-          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="card card-compact bg-base-100 shadow-xl">
-      <figure>
-        <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
-      </figure>
-      <div class="card-body">
-        <h2 class="card-title">Produit 2<div class="badge">Décoration</div></h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div class="card-actions justify-end">
-          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="card card-compact bg-base-100 shadow-xl">
-      <figure>
-        <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
-      </figure>
-      <div class="card-body">
-        <h2 class="card-title">Produit 3<div class="badge">Décoration</div></h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div class="card-actions justify-end">
-          <button class="btn" onclick="modal_product_client.showModal()">Proposer un échange</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
 
   <dialog id="modal_add_object" class="modal">
     <div class="modal-box">
@@ -130,171 +92,64 @@
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
       </form>
       <h3 class="text-lg font-bold mb-4">Ajouter un objet</h3>
-      <form action="add_product" method="post">
+      <form action="${pageContext.request.contextPath}/products" method="post">
         <div class="items-center">
           <label class="input input-bordered flex items-center gap-2 mb-2">
-            <input type="text" class="grow" placeholder="Nom de l'objet" />
+            <input type="text" name="name" class="grow" placeholder="Nom de l'objet" required />
           </label>
-          <select class="select select-bordered w-full mb-4">
+          <label class="input input-bordered flex items-center gap-2 mb-2">
+            <input type="text" name="description" class="grow" placeholder="Description" required />
+          </label>
+          <label class="input input-bordered flex items-center gap-2 mb-2">
+            <input type="text" name="image" class="grow" placeholder="URL de l'image" required />
+          </label>
+          <select class="select select-bordered w-full mb-4" name="categoryId" required>
             <option disabled selected>Choisir une catégorie</option>
-            <option>Électronique</option>
-            <option>Loisirs</option>
-            <option>Décoration</option>
+            <c:forEach var="category" items="${categoryList}">
+              <option value="${category.id}">${category.name}</option>
+            </c:forEach>
           </select>
+          <button class="btn btn-primary" type="submit">Ajouter l'objet</button>
         </div>
-        <button class="btn btn-primary" type="submit">Ajouter l'objet</button>
       </form>
     </div>
   </dialog>
 
-
-
-
   <dialog id="modal_product_client" class="modal">
-    <div class="modal-box w-11/12 max-w-5xl">
+    <div class="modal-box w-11/12 max-w-5xl max-h-[80vh] overflow-y-auto">
       <h3 class="text-lg font-bold mb-4">Mes produits</h3>
       <div class="overflow-x-auto">
         <table class="table">
+          <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Image</th>
+            <th>Catégorie</th>
+          </tr>
+          </thead>
           <tbody>
-          <!-- row 1 -->
-          <tr>
-            <th>
-              <label>
-                <input type="checkbox" class="checkbox" />
-              </label>
-            </th>
-            <td>
-              <div class="flex items-center gap-3">
-                <div class="avatar">
-                  <div class="mask mask-squircle h-12 w-12">
-                    <img
-                            src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                            alt="Avatar Tailwind CSS Component" />
-                  </div>
-                </div>
-                <div>
-                  <div class="font-bold">Hart Hagerty</div>
-                  <div class="text-sm opacity-50">United States</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Zemlak, Daniel and Leannon
-              <br />
-              <span class="badge badge-ghost badge-sm">Desktop Support Technician</span>
-            </td>
-            <td>Purple</td>
-            <th>
-              <button class="btn btn-ghost btn-xs">details</button>
-            </th>
-          </tr>
-          <!-- row 2 -->
-          <tr>
-            <th>
-              <label>
-                <input type="checkbox" class="checkbox" />
-              </label>
-            </th>
-            <td>
-              <div class="flex items-center gap-3">
-                <div class="avatar">
-                  <div class="mask mask-squircle h-12 w-12">
-                    <img
-                            src="https://img.daisyui.com/images/profile/demo/3@94.webp"
-                            alt="Avatar Tailwind CSS Component" />
-                  </div>
-                </div>
-                <div>
-                  <div class="font-bold">Brice Swyre</div>
-                  <div class="text-sm opacity-50">China</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Carroll Group
-              <br />
-              <span class="badge badge-ghost badge-sm">Tax Accountant</span>
-            </td>
-            <td>Red</td>
-            <th>
-              <button class="btn btn-ghost btn-xs">details</button>
-            </th>
-          </tr>
-          <!-- row 3 -->
-          <tr>
-            <th>
-              <label>
-                <input type="checkbox" class="checkbox" />
-              </label>
-            </th>
-            <td>
-              <div class="flex items-center gap-3">
-                <div class="avatar">
-                  <div class="mask mask-squircle h-12 w-12">
-                    <img
-                            src="https://img.daisyui.com/images/profile/demo/4@94.webp"
-                            alt="Avatar Tailwind CSS Component" />
-                  </div>
-                </div>
-                <div>
-                  <div class="font-bold">Marjy Ferencz</div>
-                  <div class="text-sm opacity-50">Russia</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Rowe-Schoen
-              <br />
-              <span class="badge badge-ghost badge-sm">Office Assistant I</span>
-            </td>
-            <td>Crimson</td>
-            <th>
-              <button class="btn btn-ghost btn-xs">details</button>
-            </th>
-          </tr>
-          <!-- row 4 -->
-          <tr>
-            <th>
-              <label>
-                <input type="checkbox" class="checkbox" />
-              </label>
-            </th>
-            <td>
-              <div class="flex items-center gap-3">
-                <div class="avatar">
-                  <div class="mask mask-squircle h-12 w-12">
-                    <img
-                            src="https://img.daisyui.com/images/profile/demo/5@94.webp"
-                            alt="Avatar Tailwind CSS Component" />
-                  </div>
-                </div>
-                <div>
-                  <div class="font-bold">Yancy Tear</div>
-                  <div class="text-sm opacity-50">Brazil</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Wyman-Ledner
-              <br />
-              <span class="badge badge-ghost badge-sm">Community Outreach Specialist</span>
-            </td>
-            <td>Indigo</td>
-            <th>
-              <button class="btn btn-ghost btn-xs">details</button>
-            </th>
-          </tr>
+          <c:forEach var="product" items="${userProductList}">
+            <tr>
+              <td>${product.name}</td>
+              <td>${product.description}</td>
+              <td>
+                <img src="${product.image}" alt="${product.name}" class="w-16 h-16 object-cover" />
+              </td>
+              <td>${product.categoryId}</td>
+            </tr>
+          </c:forEach>
           </tbody>
         </table>
       </div>
       <div class="modal-action">
         <form method="dialog">
-          <!-- if there is a button, it will close the modal -->
-          <button class="btn">Close</button>
+          <button class="btn">Fermer</button>
         </form>
       </div>
     </div>
   </dialog>
+
 
   <dialog id="modal_connexion" class="modal">
     <div class="modal-box relative">

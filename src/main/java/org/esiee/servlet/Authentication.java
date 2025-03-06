@@ -38,7 +38,7 @@ public class Authentication extends HttpServlet {
             try {
                 User user = userManager.login(email, password);
                 request.getSession().setAttribute("user", user);
-                response.sendRedirect("index.jsp");
+                response.sendRedirect("/");
             } catch (IllegalArgumentException e) {
                 response.sendRedirect("index.jsp?error=invalid");
             }
