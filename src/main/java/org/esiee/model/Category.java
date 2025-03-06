@@ -5,11 +5,10 @@ public class Category {
     private String name;
 
     public Category(int id, String name) {
+        if (id < 0 || name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Invalid id or name");
+        }
         this.id = id;
-        this.name = name;
-    }
-
-    public Category(String name) {
         this.name = name;
     }
 
@@ -17,15 +16,21 @@ public class Category {
         return id;
     }
 
+    public void setId(int id) {
+        if (id < 0) {
+            throw new IllegalArgumentException("Invalid id, cannot be negative");
+        }
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setName(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Invalid name, cannot be null or empty");
+        }
         this.name = name;
     }
 }

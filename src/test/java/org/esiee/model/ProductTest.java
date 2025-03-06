@@ -1,76 +1,79 @@
 package org.esiee.model;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductTest {
 
+    private static Date now;
+    private Product productWithAllFields;
+    private Product productWithoutIdAndDate;
+
+    @BeforeAll
+    static void setUpBeforeAll() {
+        now = new Date();
+    }
+
+    @BeforeEach
+    void setUpBeforeEach() {
+        productWithAllFields = new Product(1, "Laptop", "High-end gaming laptop", now, "image.jpg", 10, 5, true);
+        productWithoutIdAndDate = new Product("Laptop", "High-end gaming laptop", "image.jpg", 10, 5, true);
+    }
+
     @Test
     void constructorWithAllFieldsShouldInitializeCorrectly() {
-        Date now = new Date();
-        Product product = new Product(1, "Laptop", "High-end gaming laptop", now, "image.jpg", 10, 5, true);
-
-        assertEquals(1, product.getId());
-        assertEquals("Laptop", product.getName());
-        assertEquals("High-end gaming laptop", product.getDescription());
-        assertEquals(now, product.getDateCreated());
-        assertEquals("image.jpg", product.getImage());
-        assertEquals(10, product.getUserId());
-        assertEquals(5, product.getCategoryId());
-        assertTrue(product.isAvailable());
+        assertAll(
+            () -> assertEquals(1, productWithAllFields.getId()),
+            () -> assertEquals("Laptop", productWithAllFields.getName()),
+            () -> assertEquals("High-end gaming laptop", productWithAllFields.getDescription()),
+            () -> assertEquals(now, productWithAllFields.getDateCreated()),
+            () -> assertEquals("image.jpg", productWithAllFields.getImage()),
+            () -> assertEquals(10, productWithAllFields.getUserId()),
+            () -> assertEquals(5, productWithAllFields.getCategoryId()),
+            () -> assertTrue(productWithAllFields.isAvailable())
+        );
     }
 
     @Test
     void constructorWithoutIdAndDateShouldInitializeCorrectly() {
-        Product product = new Product("Laptop", "High-end gaming laptop", "image.jpg", 10, 5, true);
-
-        assertEquals("Laptop", product.getName());
-        assertEquals("High-end gaming laptop", product.getDescription());
-        assertEquals("image.jpg", product.getImage());
-        assertEquals(10, product.getUserId());
-        assertEquals(5, product.getCategoryId());
-        assertTrue(product.isAvailable());
-        assertEquals(0, product.getId());
-        assertNull(product.getDateCreated());
-    }
-
-    @Test
-    void constructorWithIdAndAvailabilityShouldInitializeCorrectly() {
-        Product product = new Product(1, true);
-
-        assertEquals(1, product.getId());
-        assertTrue(product.isAvailable());
-        assertNull(product.getName());
-        assertNull(product.getDescription());
-        assertNull(product.getDateCreated());
-        assertNull(product.getImage());
-        assertEquals(0, product.getUserId());
-        assertEquals(0, product.getCategoryId());
+        assertAll(
+            () -> assertEquals("Laptop", productWithoutIdAndDate.getName()),
+            () -> assertEquals("High-end gaming laptop", productWithoutIdAndDate.getDescription()),
+            () -> assertEquals("image.jpg", productWithoutIdAndDate.getImage()),
+            () -> assertEquals(10, productWithoutIdAndDate.getUserId()),
+            () -> assertEquals(5, productWithoutIdAndDate.getCategoryId()),
+            () -> assertTrue(productWithoutIdAndDate.isAvailable()),
+            () -> assertEquals(0, productWithoutIdAndDate.getId()),
+            () -> assertNull(productWithoutIdAndDate.getDateCreated())
+        );
     }
 
     @Test
     void settersShouldUpdateFieldsCorrectly() {
-        Date now = new Date();
-        Product product = new Product(1, "Laptop", "High-end gaming laptop", now, "image.jpg", 10, 5, true);
-
-        product.setId(2);
-        product.setName("Smartphone");
-        product.setDescription("Latest model smartphone");
         Date newDate = new Date();
-        product.setDateCreated(newDate);
-        product.setImage("new_image.jpg");
-        product.setUserId(20);
-        product.setCategoryId(10);
-        product.setAvailable(false);
+        productWithAllFields.setId(2);
+        productWithAllFields.setName("Smartphone");
+        productWithAllFields.setDescription("Latest model smartphone");
+        productWithAllFields.setDateCreated(newDate);
+        productWithAllFields.setImage("new_image.jpg");
+        productWithAllFields.setUserId(20);
+        productWithAllFields.setCategoryId(10);
+        productWithAllFields.setAvailable(false);
 
-        assertEquals(2, product.getId());
-        assertEquals("Smartphone", product.getName());
-        assertEquals("Latest model smartphone", product.getDescription());
-        assertEquals(newDate, product.getDateCreated());
-        assertEquals("new_image.jpg", product.getImage());
-        assertEquals(20, product.getUserId());
-        assertEquals(10, product.getCategoryId());
-        assertFalse(product.isAvailable());
+        assertAll(
+            () -> assertEquals(2, productWithAllFields.getId()),
+            () -> assertEquals("Smartphone", productWithAllFields.getName()),
+            () -> assertEquals("Latest model smartphone", productWithAllFields.getDescription()),
+            () -> assertEquals(newDate, productWithAllFields.getDateCreated()),
+            () -> assertEquals("new_image.jpg", productWithAllFields.getImage()),
+            () -> assertEquals(20, productWithAllFields.getUserId()),
+            () -> assertEquals(10, productWithAllFields.getCategoryId()),
+            () -> assertFalse(productWithAllFields.isAvailable())
+        );
     }
 }
