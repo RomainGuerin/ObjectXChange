@@ -10,7 +10,7 @@
 <html data-theme="emerald">
 <head>
   <title>Mes échanges</title>
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
@@ -28,12 +28,10 @@
               <div tabindex="0" role="button" class="btn btn-ghost m-1">Bienvenue, ${sessionScope.user.name}</div>
               <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                 <li><a href="${pageContext.request.contextPath}/products/user">Mes produits</a></li>
-                <li><a href="${pageContext.request.contextPath}/exchange.jsp">Mes échanges</a></li>
+                <li><a href="${pageContext.request.contextPath}/exchange">Mes échanges</a></li>
               </ul>
             </div>
-            <div>
-              <li><a class="ml-2 btn btn-outline btn-error" href="${pageContext.request.contextPath}/logout">Déconnexion</a></li>
-            </div>
+            <li><a class="ml-2 btn btn-outline btn-error" href="${pageContext.request.contextPath}/logout">Déconnexion</a></li>
           </div>
         </c:when>
         <c:otherwise>
@@ -58,7 +56,7 @@
         </figure>
         <div class="card-body">
           <h2 class="card-title">
-              ${product.name}
+            ${product.name}
             <c:set var="categoryName" value="Inconnue"/>
             <c:forEach var="category" items="${categoryList}">
               <c:if test="${category.id == product.categoryId}">

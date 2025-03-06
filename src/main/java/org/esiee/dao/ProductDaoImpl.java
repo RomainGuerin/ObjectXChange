@@ -102,4 +102,30 @@ public class ProductDaoImpl implements ProductDao {
             throw new RuntimeException("Error getting filtered products: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public Product getProductById(int productId) {
+        String query = "SELECT * FROM Product WHERE id = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Product(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("description"),
+                            rs.getDate("date_created"),
+                            rs.getString("images"),
+                            rs.getInt("user_id"),
+                            rs.getInt("category_id"),
+                            rs.getBoolean("availability")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error getting product by id: " + e.getMessage(), e);
+        }
+        return null;
+    }
 }
