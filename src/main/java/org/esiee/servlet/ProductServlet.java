@@ -10,9 +10,9 @@ import org.esiee.dao.ProductDao;
 import org.esiee.dao.ProductDaoImpl;
 import org.esiee.model.Product;
 import org.esiee.model.User;
-import java.util.List;
 
 import java.io.IOException;
+import java.util.List;
 @WebServlet("/products/*")
 public class ProductServlet extends HttpServlet {
     private ProductDao productDao = new ProductDaoImpl();
@@ -20,22 +20,20 @@ public class ProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String pathInfo = request.getPathInfo(); // Récupère le chemin après "/products/"
+        String pathInfo = request.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            // Rediriger vers la home pour lister tous les produits
-            response.sendRedirect(request.getContextPath() + "/");
-        } else if (pathInfo.equals("/user")) {
-            // Lister les produits de l'utilisateur connecté
-            HttpSession session = request.getSession();
-            User user = (User) session.getAttribute("user");
-            if (user == null) {
-                response.sendRedirect(request.getContextPath() + "/login.jsp");
-                return;
-            }
-            List<Product> productList = productDao.getProductByUserId(user.getId());
+            // Récupérer les paramètres du filtre
+            String nameFilter = request.getParameter("name");
+            String categoryFilter = request.getParameter("categoryId");
+            int categoryId = (categoryFilter != null && !categoryFilter.isEmpty()) ? Integer.parseInt(categoryFilter) : -1;
+
+            // Récupérer les produits filtrés
+            List<Product> productList = productDao.getFilteredProducts(nameFilter, categoryId);
             request.setAttribute("productList", productList);
-            request.getRequestDispatcher("/myProducts.jsp").forward(request, response);
+
+            // Rediriger vers la page d'affichage
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
