@@ -6,16 +6,28 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.esiee.dao.ProductDao;
-import org.esiee.dao.ProductDaoImpl;
+import org.esiee.dao.*;
 import org.esiee.model.Product;
 import org.esiee.model.User;
 import java.util.List;
 
 import java.io.IOException;
+import org.esiee.service.UserService;
+
 @WebServlet("/products/*")
 public class ProductServlet extends HttpServlet {
-    private ProductDao productDao = new ProductDaoImpl();
+    private UserService userService; // Utilisation de UserService
+
+    @Override
+    public void init() throws ServletException {
+        // Initialisation du UserService avec les DAOs nécessaires
+        this.userService = new UserService(
+                new UserDaoImpl(),      // DAO pour les utilisateurs
+                new ProductDaoImpl(),  // DAO pour les produits
+                new CategoryDaoImpl(), // DAO pour les catégories
+                new ExchangeDaoImpl()   // DAO pour les échanges
+        );
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,7 +45,7 @@ public class ProductServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/login.jsp");
                 return;
             }
-            List<Product> productList = productDao.getProductByUserId(user.getId());
+            List<Product> productList = userService.getAllProductsByUserId(user.getId());
             request.setAttribute("productList", productList);
             request.getRequestDispatcher("/myProducts.jsp").forward(request, response);
         } else {
@@ -58,9 +70,9 @@ public class ProductServlet extends HttpServlet {
         String image = request.getParameter("image");
         int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 
-        // Créer et enregistrer le produit
+        // Créer et enregistrer le produit via UserService
         Product product = new Product(name, description, image, user.getId(), categoryId, true);
-        productDao.save(product);
+        userService.addProduct(product);
 
         // Rediriger vers la liste des produits de l'utilisateur
         response.sendRedirect(request.getContextPath() + "/products/user");

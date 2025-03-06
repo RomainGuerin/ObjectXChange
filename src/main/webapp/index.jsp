@@ -73,7 +73,13 @@
         <div class="card-body">
           <h2 class="card-title">
               ${product.name}
-            <div class="badge">Catégorie ID: ${product.categoryId}</div>
+            <c:set var="categoryName" value="Inconnue"/>
+            <c:forEach var="category" items="${categoryList}">
+              <c:if test="${category.id == product.categoryId}">
+                <c:set var="categoryName" value="${category.name}"/>
+              </c:if>
+            </c:forEach>
+            <div class="badge">${categoryName}</div>
           </h2>
           <p>${product.description}</p>
           <c:if test="${not empty sessionScope.user}">
@@ -225,5 +231,82 @@
     </div>
   </dialog>
 </div>
+
+<!-- Styles pour les animations -->
+<style>
+  .toast .alert {
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+
+  .toast .alert.hide {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+</style>
+
+<!-- Conteneur pour les toasts (en bas à droite) -->
+<div class="toast toast-bottom toast-end">
+  <!-- Toast de succès -->
+  <c:if test="${not empty param.success}">
+    <div id="successToast" class="alert alert-success alert-soft">
+      <c:choose>
+        <c:when test="${param.success == 'registered'}">
+          Inscription réussie ! Bienvenue sur ObjectXChange.
+        </c:when>
+        <c:when test="${param.success == 'loggedin'}">
+          Connexion réussie ! Bienvenue, ${sessionScope.user.name}.
+        </c:when>
+      </c:choose>
+    </div>
+  </c:if>
+
+  <!-- Toast d'erreur -->
+  <c:if test="${not empty param.error}">
+    <div id="errorToast" class="alert alert-error">
+      <c:choose>
+        <c:when test="${param.error == 'exists'}">
+          Erreur : Cet email est déjà utilisé.
+        </c:when>
+        <c:when test="${param.error == 'invalid'}">
+          Erreur : Email ou mot de passe incorrect.
+        </c:when>
+      </c:choose>
+    </div>
+  </c:if>
+</div>
+
+<!-- Script pour masquer les toasts après 5 secondes -->
+<script>
+  // Masquer le toast de succès après 5 secondes
+  const successToast = document.getElementById('successToast');
+  if (successToast) {
+    setTimeout(() => {
+      successToast.classList.add('hide');
+      // Supprimer l'élément du DOM après l'animation
+      setTimeout(() => successToast.remove(), 500); // 500 ms = durée de l'animation
+    }, 3000); // 5000 ms = 5 secondes
+  }
+
+  // Masquer le toast d'erreur après 5 secondes
+  const errorToast = document.getElementById('errorToast');
+  if (errorToast) {
+    setTimeout(() => {
+      errorToast.classList.add('hide');
+      // Supprimer l'élément du DOM après l'animation
+      setTimeout(() => errorToast.remove(), 500); // 500 ms = durée de l'animation
+    }, 3000); // 5000 ms = 5 secondes
+  }
+</script>
+
+<script>
+  // Vérifier si le paramètre showLoginModal est présent dans l'URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const showLoginModal = urlParams.get('showLoginModal');
+
+  // Si le paramètre est présent, ouvrir le modal de connexion
+  if (showLoginModal === 'true') {
+    document.getElementById('modal_connexion').showModal();
+  }
+</script>
 </body>
 </html>

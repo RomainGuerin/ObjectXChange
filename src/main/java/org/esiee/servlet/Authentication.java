@@ -30,17 +30,21 @@ public class Authentication extends HttpServlet {
             String name = request.getParameter("name");
             try {
                 userManager.register(name, email, password);
-                response.sendRedirect("index.jsp?success=registered");
+                // Rediriger avec un message de succès
+                response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
             } catch (IllegalArgumentException e) {
-                response.sendRedirect("index.jsp?error=exists");
+                // Rediriger avec un message d'erreur
+                response.sendRedirect(request.getContextPath() + "/?error=exists");
             }
         } else if ("/login".equals(action)) {
             try {
                 User user = userManager.login(email, password);
                 request.getSession().setAttribute("user", user);
-                response.sendRedirect("/");
+                // Rediriger avec un message de succès
+                response.sendRedirect(request.getContextPath() + "/?success=loggedin");
             } catch (IllegalArgumentException e) {
-                response.sendRedirect("index.jsp?error=invalid");
+                // Rediriger avec un message d'erreur
+                response.sendRedirect(request.getContextPath() + "/?error=invalid");
             }
         }
     }
