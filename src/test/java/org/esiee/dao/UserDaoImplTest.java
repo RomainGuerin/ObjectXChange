@@ -49,7 +49,7 @@ class UserDaoImplTest {
 
     @Test
     void testSaveUser() throws SQLException {
-        User user = new User("Alice", "alice@example.com", "secure123");
+        User user = new User("Alice", "alice@example.com", "Secure123@!");
 
         // Appeler la méthode à tester
         userDao.save(user);
@@ -57,7 +57,7 @@ class UserDaoImplTest {
         // Vérifier que les paramètres sont bien passés et que la requête est exécutée
         verify(mockPreparedStatement, times(1)).setString(1, "alice@example.com");
         verify(mockPreparedStatement, times(1)).setString(2, "Alice");
-        verify(mockPreparedStatement, times(1)).setString(3, "secure123");
+        verify(mockPreparedStatement, times(1)).setString(3, "Secure123@!");
         verify(mockPreparedStatement, times(1)).executeUpdate();
     }
 
@@ -69,7 +69,7 @@ class UserDaoImplTest {
         when(mockResultSet.getInt("id")).thenReturn(1);
         when(mockResultSet.getString("name")).thenReturn("Alice");
         when(mockResultSet.getString("email")).thenReturn("alice@example.com");
-        when(mockResultSet.getString("password")).thenReturn("secure123");
+        when(mockResultSet.getString("password")).thenReturn("Secure123@!");
 
         // Appeler la méthode à tester
         User retrievedUser = userDao.getByEmail("alice@example.com");

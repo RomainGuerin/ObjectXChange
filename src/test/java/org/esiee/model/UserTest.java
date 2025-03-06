@@ -67,4 +67,14 @@ class UserTest {
             () -> assertEquals("newPassword123!", userWithAllFields.getPassword())
         );
     }
+
+    @Test
+    void invalidPasswordShouldThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> new User("John Doe", "12345678"));
+    }
+
+    @Test
+    void invalidEmailShouldThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> new User("John Doe", "john.doe"));
+    }
 }
