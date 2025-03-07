@@ -76,4 +76,12 @@ public class UserService {
     public List<Exchange> getAllExchangesByUserId(int userId) {
         return exchangeDao.getExchangesByUserId(userId);
     }
+
+    public Product getProductById(int productId) {
+        return productDao.getProductById(productId);
+    }
+
+    public Exchange getExchangeById(int productId) {
+        return exchangeDao.getExchangeById(productId);
+    }
 }
