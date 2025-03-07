@@ -4,14 +4,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Utility class for managing database connections.
+ */
 public class DatabaseConnection {
     private static final String URL = "jdbc:sqlite:database.db";
     private static Connection connection;
 
+    // Private constructor to prevent instantiation
     private DatabaseConnection() {};
 
+    /**
+     * Retrieves a connection to the database. If the connection is closed or null, a new connection is created.
+     *
+     * @return a Connection object to the database
+     * @throws RuntimeException if the JDBC driver is not found or a database access error occurs
+     */
     public static Connection getConnection() {
-        // show current path file
+        // Show current path file
         System.out.println(System.getProperty("user.dir") + "/database.db");
 
         try {
