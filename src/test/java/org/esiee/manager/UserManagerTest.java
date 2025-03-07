@@ -113,27 +113,27 @@ class UserManagerTest {
 
     @Test
     void testSetNewExchange() {
-        userManager.setNewExchange(100, 200, Status.Pending);
+        userManager.setNewExchange(100, 200, Status.PENDING);
         verify(userService, times(1)).setNewExchange(argThat(exchange ->
                 exchange.getProductIdAsked() == 100 &&
                         exchange.getProductIdOffered() == 200 &&
-                        exchange.getStatus() == Status.Pending
+                        exchange.getStatus() == Status.PENDING
         ));
     }
 
     @Test
     void testUpdateExchange() {
-        Exchange exchange = new Exchange(10, 100, 200, Status.Pending, new Date(), new Date());
-        when(userService.updateExchange(exchange, Status.Accepted)).thenReturn(true);
-        boolean result = userManager.updateExchange(exchange, Status.Accepted);
-        verify(userService, times(1)).updateExchange(exchange, Status.Accepted);
+        Exchange exchange = new Exchange(10, 100, 200, Status.PENDING, new Date(), new Date());
+        when(userService.updateExchange(exchange, Status.ACCEPTED)).thenReturn(true);
+        boolean result = userManager.updateExchange(exchange, Status.ACCEPTED);
+        verify(userService, times(1)).updateExchange(exchange, Status.ACCEPTED);
         assertTrue(result);
     }
 
     @Test
     void testGetAllExchangesByUserId() {
         List<Exchange> dummyExchanges = Collections.singletonList(
-                new Exchange(1, 100, 200, Status.Pending, new Date(), new Date()));
+                new Exchange(1, 100, 200, Status.PENDING, new Date(), new Date()));
         when(userService.getAllExchangesByUserId(1)).thenReturn(dummyExchanges);
         List<Exchange> exchanges = userManager.getAllExchangesByUserId(1);
         verify(userService, times(1)).getAllExchangesByUserId(1);

@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html data-theme="emerald">
+<html data-theme="emerald" xml:lang="fr" lang="fr">
 <head>
   <title>ObjectXChange</title>
   <link rel="icon" type="image/x-icon" href="images/icon.ico">
@@ -23,10 +23,10 @@
         <c:when test="${not empty sessionScope.user}">
           <div class="flex items-center">
             <div class="dropdown">
-              <div tabindex="0" role="button" class="btn btn-ghost m-1">
+              <button role="button" class="btn btn-ghost m-1">
                 Bienvenue, ${sessionScope.user.name}
-              </div>
-              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+              </button>
+              <ul class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                 <li><a href="${pageContext.request.contextPath}/products/user">Mes produits</a></li>
                 <li><a href="${pageContext.request.contextPath}/exchange">Mes échanges</a></li>
               </ul>

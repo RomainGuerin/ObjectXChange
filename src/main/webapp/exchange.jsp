@@ -1,7 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html data-theme="emerald">
+<!DOCTYPE html>
+<html data-theme="emerald" xml:lang="fr" lang="fr">
 <head>
     <title>Mes échanges</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -52,10 +53,10 @@
                 <c:when test="${not empty sessionScope.user}">
                     <div class="flex items-center">
                         <div class="dropdown">
-                            <div tabindex="0" role="button" class="btn btn-ghost m-1">
+                            <button role="button" class="btn btn-ghost m-1">
                                 Bienvenue, ${sessionScope.user.name}
-                            </div>
-                            <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                            </button>
+                            <ul class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                                 <li>
                                     <a href="${pageContext.request.contextPath}/products/user">
                                         Mes produits
@@ -137,7 +138,7 @@
                             <input type="hidden" name="exchangeId" value="${exchange.id}" />
                             <input type="hidden" name="newStatus" value="Accepted" />
                             <button class="btn btn-success btn-sm" type="submit"
-                                    <c:if test="${exchange.status ne 'Pending'}">disabled</c:if>>
+                                    <c:if test="${exchange.status ne 'PENDING'}">disabled</c:if>>
                                 Accepter
                             </button>
                         </form>
@@ -145,7 +146,7 @@
                             <input type="hidden" name="exchangeId" value="${exchange.id}" />
                             <input type="hidden" name="newStatus" value="Denied" />
                             <button class="btn btn-error btn-sm" type="submit"
-                                    <c:if test="${exchange.status ne 'Pending'}">disabled</c:if>>
+                                    <c:if test="${exchange.status ne 'PENDING'}">disabled</c:if>>
                                 Refuser
                             </button>
                         </form>

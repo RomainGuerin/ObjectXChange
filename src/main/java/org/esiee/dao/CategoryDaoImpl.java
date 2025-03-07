@@ -20,7 +20,7 @@ public class CategoryDaoImpl implements CategoryDao {
 
     @Override
     public List<Category> getAllCategory() {
-        String query = "SELECT * FROM Category";
+        String query = "SELECT id, name FROM Category";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             List<Category> categories = new ArrayList<>();

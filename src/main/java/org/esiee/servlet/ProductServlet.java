@@ -28,6 +28,7 @@ public class ProductServlet extends HttpServlet {
         this.userManager = new UserManager(userService);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -67,6 +68,7 @@ public class ProductServlet extends HttpServlet {
         request.getRequestDispatcher("/myProducts.jsp").forward(request, response);
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");

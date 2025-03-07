@@ -29,6 +29,7 @@ public class HomeServlet extends HttpServlet {
         this.userManager = new UserManager(userService);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 

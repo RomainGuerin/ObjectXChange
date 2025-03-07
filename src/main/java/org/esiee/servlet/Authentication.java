@@ -23,6 +23,7 @@ public class Authentication extends HttpServlet {
         this.userManager = new UserManager(userService);
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String action = request.getServletPath();
         String email = request.getParameter("email");
