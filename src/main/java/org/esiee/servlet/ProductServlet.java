@@ -18,9 +18,13 @@ import org.esiee.service.UserService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/products/*")
 public class ProductServlet extends HttpServlet {
+    public static final String CATEGORY_ID = "categoryId";
+    private static final Logger LOGGER = Logger.getLogger(ProductServlet.class.getName());
     private final UserManager userManager;
 
     public ProductServlet() {
@@ -38,7 +42,11 @@ public class ProductServlet extends HttpServlet {
         if (pathInfo == null || pathInfo.equals("/")) {
             handleProductList(request, response);
         } else if (pathInfo.equals("/user")) {
-            handleUserProducts(request, response);
+            try {
+                handleUserProducts(request, response);
+            } catch (ServletException | IOException e) {
+                LOGGER.log(Level.SEVERE, "Error handling user products", e);
+            }
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -47,8 +55,15 @@ public class ProductServlet extends HttpServlet {
     private void handleProductList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String nameFilter = request.getParameter("name");
-        String categoryFilter = request.getParameter("categoryId");
-        int categoryId = (categoryFilter != null && !categoryFilter.isEmpty()) ? Integer.parseInt(categoryFilter) : -1;
+        String categoryFilter = request.getParameter(CATEGORY_ID);
+        int categoryId = -1;
+        if (categoryFilter != null && !categoryFilter.isEmpty()) {
+            try {
+                categoryId = Integer.parseInt(categoryFilter);
+            } catch (NumberFormatException e) {
+                LOGGER.log(Level.WARNING, String.format("Invalid categoryId format: %s", categoryFilter), e);
+            }
+        }
 
         List<Product> productList = userManager.getAllProductsFiltered(nameFilter, categoryId);
         request.setAttribute("productList", productList);
@@ -60,7 +75,11 @@ public class ProductServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
+            try {
+                response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Redirection failed for user login modal", e);
+            }
             return;
         }
         List<Product> productList = userManager.getAllProductsByUserId(user.getId());
@@ -73,17 +92,31 @@ public class ProductServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
+            try {
+                response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Redirection failed for user login modal", e);
+            }
             return;
         }
 
         String name = request.getParameter("name");
         String description = request.getParameter("description");
         String image = request.getParameter("image");
-        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+        int categoryId;
+        try {
+            categoryId = Integer.parseInt(request.getParameter(CATEGORY_ID));
+        } catch (NumberFormatException e) {
+            LOGGER.log(Level.WARNING, String.format("Invalid categoryId format: %s", request.getParameter(CATEGORY_ID)), e);
+            categoryId = -1;
+        }
 
         userManager.addProduct(name, description, image, user.getId(), categoryId, true);
 
-        response.sendRedirect(request.getContextPath() + "/products/user");
+        try {
+            response.sendRedirect(request.getContextPath() + "/products/user");
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Redirection failed after adding product", e);
+        }
     }
 }

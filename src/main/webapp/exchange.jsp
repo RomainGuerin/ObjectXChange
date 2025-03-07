@@ -53,7 +53,7 @@
                 <c:when test="${not empty sessionScope.user}">
                     <div class="flex items-center">
                         <div class="dropdown">
-                            <button role="button" class="btn btn-ghost m-1">
+                            <button class="btn btn-ghost m-1">
                                 Bienvenue, ${sessionScope.user.name}
                             </button>
                             <ul class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
@@ -136,7 +136,7 @@
                         <!-- Boutons d'action disponibles si le statut est Pending -->
                         <form action="${pageContext.request.contextPath}/exchange" method="post" style="display:inline;">
                             <input type="hidden" name="exchangeId" value="${exchange.id}" />
-                            <input type="hidden" name="newStatus" value="Accepted" />
+                            <input type="hidden" name="newStatus" value="ACCEPTED" />
                             <button class="btn btn-success btn-sm" type="submit"
                                     <c:if test="${exchange.status ne 'PENDING'}">disabled</c:if>>
                                 Accepter
@@ -144,7 +144,7 @@
                         </form>
                         <form action="${pageContext.request.contextPath}/exchange" method="post" style="display:inline;">
                             <input type="hidden" name="exchangeId" value="${exchange.id}" />
-                            <input type="hidden" name="newStatus" value="Denied" />
+                            <input type="hidden" name="newStatus" value="DENIED" />
                             <button class="btn btn-error btn-sm" type="submit"
                                     <c:if test="${exchange.status ne 'PENDING'}">disabled</c:if>>
                                 Refuser

@@ -23,7 +23,7 @@
         <c:when test="${not empty sessionScope.user}">
           <div class="flex items-center">
             <div class="dropdown">
-              <button role="button" class="btn btn-ghost m-1">
+              <button class="btn btn-ghost m-1">
                 Bienvenue, ${sessionScope.user.name}
               </button>
               <ul class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">

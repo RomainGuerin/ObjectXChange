@@ -35,7 +35,14 @@ public class Authentication extends HttpServlet {
                 userManager.register(name, email, password);
                 response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
             } catch (IllegalArgumentException e) {
-                response.sendRedirect(request.getContextPath() + "/?error=exists");
+                if (
+                        e.toString().contains("Invalid email format") ||
+                                e.toString().contains("Password must be at least 8 characters")
+                ) {
+                    response.sendRedirect(request.getContextPath() + "/?error=invalid");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/?error=exists");
+                }
             }
         } else if ("/login".equals(action)) {
             try {
