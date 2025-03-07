@@ -69,4 +69,28 @@ public class ExchangeDaoImpl implements ExchangeDao {
         }
         return exchanges;
     }
+
+    @Override
+    public Exchange getExchangeById(int productId) {
+        String query = "SELECT * FROM exchange WHERE id = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(query)) {
+                ps.setInt(1, productId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return new Exchange(
+                                rs.getInt("id"),
+                                rs.getInt("product_id_asked"),
+                                rs.getInt("product_id_offered"),
+                                Status.valueOf(rs.getString("status")),
+                                new java.util.Date(rs.getTimestamp("created_at").getTime()),
+                                new java.util.Date(rs.getTimestamp("updated_at").getTime())
+                        );
+                    }
+                }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error getting exchanges by product id: " + e.getMessage(), e);
+        }
+        return null;
+    }
 }

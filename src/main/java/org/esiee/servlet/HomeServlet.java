@@ -1,46 +1,50 @@
 package org.esiee.servlet;
 
-import org.esiee.dao.CategoryDao;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.esiee.dao.CategoryDaoImpl;
-import org.esiee.dao.ProductDao;
+import org.esiee.dao.ExchangeDaoImpl;
 import org.esiee.dao.ProductDaoImpl;
+import org.esiee.dao.UserDaoImpl;
+import org.esiee.manager.UserManager;
 import org.esiee.model.Category;
 import org.esiee.model.Product;
-
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
 import org.esiee.model.User;
+import org.esiee.service.UserService;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/")
 public class HomeServlet extends HttpServlet {
-    private ProductDao productDao = new ProductDaoImpl();
-    private CategoryDao categoryDao = new CategoryDaoImpl();
+    private final UserManager userManager;
 
-    @Override
+    public HomeServlet() {
+        UserService userService = new UserService(new UserDaoImpl(), new ProductDaoImpl(), new CategoryDaoImpl(), new ExchangeDaoImpl());
+        this.userManager = new UserManager(userService);
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Récupérer tous les produits
-        List<Product> productList = productDao.getAllProducts();
+        List<Product> productList = userManager.getAllProducts();
         request.setAttribute("productList", productList);
 
-        // Récupérer toutes les catégories
-        List<Category> categoryList = categoryDao.getAllCategory();
+        List<Category> categoryList = userManager.getAllCategory();
         request.setAttribute("categoryList", categoryList);
 
-        // Récupérer les produits de l'utilisateur connecté
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user != null) {
-            List<Product> userProductList = productDao.getProductByUserId(user.getId());
+            List<Product> userProductList = userManager.getAllProductsByUserId(user.getId());
             request.setAttribute("userProductList", userProductList);
         }
 
-        // Transférer à la JSP
         RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
         dispatcher.forward(request, response);
     }

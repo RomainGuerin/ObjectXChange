@@ -10,16 +10,14 @@
 <html data-theme="emerald">
 <head>
   <title>Mes échanges</title>
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
 
 <div class="navbar bg-base-100 mb-8">
   <div class="flex-1">
-    <a class="ml-4" href="/">
-      <img src="images/logo.png" alt="Logo ObjectXChange" class="h-10">
-    </a>
+    <a href="${pageContext.request.contextPath}" class="btn btn-ghost text-xl">Object<span class="text-primary">X</span>Change</a>
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
@@ -29,13 +27,11 @@
             <div class="dropdown">
               <div tabindex="0" role="button" class="btn btn-ghost m-1">Bienvenue, ${sessionScope.user.name}</div>
               <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                <li><a href="/products/user">Mes produits</a></li>
-                <li><a href="/exchange.jsp">Mes échanges</a></li>
+                <li><a href="${pageContext.request.contextPath}/products/user">Mes produits</a></li>
+                <li><a href="${pageContext.request.contextPath}/exchange">Mes échanges</a></li>
               </ul>
             </div>
-            <div>
-              <li><a class="ml-2 btn btn-outline btn-error" href="/logout">Déconnexion</a></li>
-            </div>
+            <li><a class="ml-2 btn btn-outline btn-error" href="${pageContext.request.contextPath}/logout">Déconnexion</a></li>
           </div>
         </c:when>
         <c:otherwise>
@@ -52,7 +48,7 @@
     <div class="font-semibold text-xl">Mes produits</div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-4">
     <c:forEach var="product" items="${productList}">
       <div class="card card-compact bg-base-100 shadow-xl">
         <figure>
@@ -60,8 +56,14 @@
         </figure>
         <div class="card-body">
           <h2 class="card-title">
-              ${product.name}
-            <div class="badge">Catégorie ID: ${product.categoryId}</div>
+            ${product.name}
+            <c:set var="categoryName" value="Inconnue"/>
+            <c:forEach var="category" items="${categoryList}">
+              <c:if test="${category.id == product.categoryId}">
+                <c:set var="categoryName" value="${category.name}"/>
+              </c:if>
+            </c:forEach>
+            <div class="badge">${categoryName}</div>
           </h2>
           <p>${product.description}</p>
         </div>

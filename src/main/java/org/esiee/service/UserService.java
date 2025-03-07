@@ -34,6 +34,7 @@ public class UserService {
         if (validUser == null || !validUser.getPassword().equals(user.getPassword())) {
             throw new IllegalArgumentException("Invalid credentials");
         }
+        validUser.setPassword(null);
         return validUser;
     }
 
@@ -74,5 +75,13 @@ public class UserService {
 
     public List<Exchange> getAllExchangesByUserId(int userId) {
         return exchangeDao.getExchangesByUserId(userId);
+    }
+
+    public Product getProductById(int productId) {
+        return productDao.getProductById(productId);
+    }
+
+    public Exchange getExchangeById(int productId) {
+        return exchangeDao.getExchangeById(productId);
     }
 }

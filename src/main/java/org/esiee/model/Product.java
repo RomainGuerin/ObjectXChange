@@ -32,11 +32,6 @@ public class Product {
         this.isAvailable = isAvailable;
     }
 
-    public Product(int id, boolean isAvailable) {
-        this.id = id;
-        this.isAvailable = isAvailable;
-    }
-
     public int getId() {
         return id;
     }

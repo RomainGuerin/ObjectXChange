@@ -3,7 +3,6 @@ package org.esiee.manager;
 import org.esiee.model.*;
 import org.esiee.service.UserService;
 
-import java.util.Date;
 import java.util.List;
 
 public class UserManager {
@@ -55,5 +54,13 @@ public class UserManager {
 
     public List<Exchange> getAllExchangesByUserId(int userId) {
         return userService.getAllExchangesByUserId(userId);
+    }
+
+    public Product getProductById(int productId) {
+        return userService.getProductById(productId);
+    }
+
+    public Exchange getExchangeById(int productId) {
+        return userService.getExchangeById(productId);
     }
 }

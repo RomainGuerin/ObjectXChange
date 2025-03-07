@@ -39,7 +39,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getAllProducts() {
-        String query = "SELECT * FROM Product";
+        String query = "SELECT * FROM Product ORDER BY date_created DESC";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             return getProduct(ps);
@@ -50,7 +50,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getProductByUserId(int userId) {
-        String query = "SELECT * FROM Product WHERE user_id = ?";
+        String query = "SELECT * FROM Product WHERE user_id = ? ORDER BY date_created DESC";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, userId);
@@ -81,14 +81,51 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getFilteredProducts(String name, int categoryId) {
-        String query = "SELECT * FROM Product WHERE name LIKE ? OR category_id = ?"; //TODO : AND or OR
+        String query = "SELECT * FROM Product WHERE name LIKE ?";
+
+        if (categoryId > 0) {
+            query += " AND category_id = ?";
+        }
+
+        query += " ORDER BY date_created DESC";
+
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, "%" + name + "%");
-            ps.setInt(2, categoryId);
+
+            if (categoryId > 0) {
+                ps.setInt(2, categoryId);
+            }
+
             return getProduct(ps);
         } catch (SQLException e) {
             throw new RuntimeException("Error getting filtered products: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public Product getProductById(int productId) {
+        String query = "SELECT * FROM Product WHERE id = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Product(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("description"),
+                            rs.getDate("date_created"),
+                            rs.getString("images"),
+                            rs.getInt("user_id"),
+                            rs.getInt("category_id"),
+                            rs.getBoolean("availability")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error getting product by id: " + e.getMessage(), e);
+        }
+        return null;
     }
 }

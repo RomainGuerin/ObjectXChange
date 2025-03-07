@@ -25,12 +25,6 @@ public class Exchange {
         this.status = status;
     }
 
-    public Exchange(int id, Status status, Date dateUpdated) {
-        this.id = id;
-        this.status = status;
-        this.dateUpdated = dateUpdated;
-    }
-
     public int getId() {
         return id;
     }
