@@ -7,7 +7,9 @@
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html data-theme="emerald">
+<!DOCTYPE html>
+<html data-theme="emerald" xml:lang="fr" lang="fr">
+
 <head>
   <title>Mes échanges</title>
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" />
@@ -25,8 +27,10 @@
         <c:when test="${not empty sessionScope.user}">
           <div class="flex items-center">
             <div class="dropdown">
-              <div tabindex="0" role="button" class="btn btn-ghost m-1">Bienvenue, ${sessionScope.user.name}</div>
-              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+              <button class="btn btn-ghost m-1">
+                Bienvenue, ${sessionScope.user.name}
+              </button>
+              <ul class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                 <li><a href="${pageContext.request.contextPath}/products/user">Mes produits</a></li>
                 <li><a href="${pageContext.request.contextPath}/exchange">Mes échanges</a></li>
               </ul>

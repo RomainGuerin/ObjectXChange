@@ -13,9 +13,12 @@ import org.esiee.model.User;
 import org.esiee.service.UserService;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet({"/register", "/login"})
 public class Authentication extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(Authentication.class.getName());
     private final UserManager userManager;
 
     public Authentication() {
@@ -23,6 +26,26 @@ public class Authentication extends HttpServlet {
         this.userManager = new UserManager(userService);
     }
 
+    private static void checkValidityPasswordEmail(HttpServletRequest request, HttpServletResponse response, IllegalArgumentException e) {
+        if (
+                e.toString().contains("Invalid email format") ||
+                        e.toString().contains("Password must be at least 8 characters")
+        ) {
+            try {
+                response.sendRedirect(request.getContextPath() + "/?error=invalid");
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, "Failed to redirect after registration", ex);
+            }
+        } else {
+            try {
+                response.sendRedirect(request.getContextPath() + "/?error=exists");
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, "Failed to redirect after registration", ex);
+            }
+        }
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String action = request.getServletPath();
         String email = request.getParameter("email");
@@ -34,7 +57,7 @@ public class Authentication extends HttpServlet {
                 userManager.register(name, email, password);
                 response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
             } catch (IllegalArgumentException e) {
-                response.sendRedirect(request.getContextPath() + "/?error=exists");
+                checkValidityPasswordEmail(request, response, e);
             }
         } else if ("/login".equals(action)) {
             try {

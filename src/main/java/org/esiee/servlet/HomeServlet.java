@@ -19,9 +19,12 @@ import org.esiee.service.UserService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/")
 public class HomeServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(HomeServlet.class.getName());
     private final UserManager userManager;
 
     public HomeServlet() {
@@ -29,9 +32,8 @@ public class HomeServlet extends HttpServlet {
         this.userManager = new UserManager(userService);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         List<Product> productList = userManager.getAllProducts();
         request.setAttribute("productList", productList);
 
@@ -46,6 +48,15 @@ public class HomeServlet extends HttpServlet {
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
-        dispatcher.forward(request, response);
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException | IOException e) {
+            LOGGER.log(Level.SEVERE, "Erreur lors du transfert vers /index.jsp", e);
+            try {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur lors de l'affichage de la page d'accueil");
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, "Échec de l'envoi du message d'erreur", ex);
+            }
+        }
     }
 }
