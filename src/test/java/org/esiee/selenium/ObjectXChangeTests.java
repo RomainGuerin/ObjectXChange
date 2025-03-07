@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class ObjectXChangeTests {
     private WebDriver driver;
     private WebDriverWait wait;
-    private final String baseUrl = "http://localhost:8080/ObjectXChange";
+    private final String baseUrl = "http://localhost:4444/wd/hub";
     private final String user = "TicTac";
     private final String email = "TicTacToePic@lhorloge.com";
     private final String password = "AliSuperMan2030!";
