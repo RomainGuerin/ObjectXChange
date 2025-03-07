@@ -22,7 +22,7 @@
         <version>3.0.0-M1</version>
         <configuration>
           <excludes>
-            <exclude>**/org/esiee/selenium/**.java</exclude>
+            <exclude>**/test/java/org/esiee/selenium/**.java</exclude>
           </excludes>
         </configuration>
       </plugin>
