@@ -4,6 +4,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.*;
 
 import java.time.Duration;
@@ -22,7 +23,9 @@ public class ObjectXChangeTests {
     @BeforeEach
     public void setUp() {
         WebDriverManager.firefoxdriver().setup();
-        driver = new FirefoxDriver();
+        FirefoxOptions options = new FirefoxOptions();
+        options.addPreference("remote.active-protocols", 3);
+        driver = new FirefoxDriver(options);
         driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
