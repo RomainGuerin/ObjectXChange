@@ -20,12 +20,14 @@ import org.esiee.service.UserService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @WebServlet("/exchange")
 public class ExchangeServlet extends HttpServlet {
     public static final String EXCHANGE_ERROR_PRODUCT_NOT_FOUND = "/exchange?error=productNotFound";
     public static final String EXCHANGE_ERROR_PRODUCT_NOT_AVAILABLE = "/exchange?error=productNotAvailable";
     public static final String EXCHANGE_ERROR_EXCHANGE_ERROR = "/exchange?error=exchangeError";
+    private static final Logger LOGGER = Logger.getLogger(ExchangeServlet.class.getName());
     private final UserManager userManager;
 
     public ExchangeServlet() {
@@ -75,12 +77,20 @@ public class ExchangeServlet extends HttpServlet {
             return;
         }
 
-        if (updateExchange(request, response)) return;
+        try {
+            if (updateExchange(request, response)) return;
+        } catch (IOException e) {
+            LOGGER.log(java.util.logging.Level.SEVERE, "Failed to update exchange", e);
+        }
 
         try {
             createExchange(request, response, user);
         } catch (IOException e) {
-            response.sendRedirect(request.getContextPath() + EXCHANGE_ERROR_EXCHANGE_ERROR);
+            try {
+                response.sendRedirect(request.getContextPath() + EXCHANGE_ERROR_EXCHANGE_ERROR);
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, "Failed to redirect after exchange creation", ex);
+            }
         }
     }
 
