@@ -34,7 +34,7 @@ public class UserService {
         if (validUser == null || !validUser.getPassword().equals(user.getPassword())) {
             throw new IllegalArgumentException("Invalid credentials");
         }
-        validUser.setPassword(null);
+        //validUser.setPassword("");
         return validUser;
     }
 
