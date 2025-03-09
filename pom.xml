@@ -13,7 +13,6 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
   <build>
     <plugins>
       <plugin>
@@ -22,7 +21,7 @@
         <version>3.0.0-M1</version>
         <configuration>
           <excludes>
-            <exclude>**/test/java/org/esiee/selenium/**.java</exclude>
+            <exclude>**/selenium/**/*.java</exclude>
           </excludes>
         </configuration>
       </plugin>
