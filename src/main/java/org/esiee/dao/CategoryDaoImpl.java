@@ -11,7 +11,9 @@ import java.util.List;
 
 public class CategoryDaoImpl implements CategoryDao {
     @Override
-    public void save(Category entity) {}
+    public void save(Category entity) {
+        // It's a DAO
+    }
 
     @Override
     public boolean update(Category entity) {
@@ -20,7 +22,7 @@ public class CategoryDaoImpl implements CategoryDao {
 
     @Override
     public List<Category> getAllCategory() {
-        String query = "SELECT * FROM Category";
+        String query = "SELECT id, name FROM Category";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             List<Category> categories = new ArrayList<>();

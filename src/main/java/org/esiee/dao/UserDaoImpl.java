@@ -29,7 +29,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getByEmail(String email) {
-        String query = "SELECT * FROM User WHERE email = ?";
+        String query = "SELECT id, name, email, password FROM User WHERE email = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, email);
