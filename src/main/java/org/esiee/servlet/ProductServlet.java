@@ -11,13 +11,10 @@ import org.esiee.dao.ExchangeDaoImpl;
 import org.esiee.dao.ProductDaoImpl;
 import org.esiee.dao.UserDaoImpl;
 import org.esiee.manager.UserManager;
-import org.esiee.model.Category;
-import org.esiee.model.Product;
 import org.esiee.model.User;
 import org.esiee.service.UserService;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,28 +25,46 @@ public class ProductServlet extends HttpServlet {
     private final transient UserManager userManager;
 
     public ProductServlet() {
-        UserService userService = new UserService(new UserDaoImpl(), new ProductDaoImpl(), new CategoryDaoImpl(), new ExchangeDaoImpl());
+        UserService userService = new UserService(
+                new UserDaoImpl(), new ProductDaoImpl(), new CategoryDaoImpl(), new ExchangeDaoImpl());
         this.userManager = new UserManager(userService);
     }
 
-    private static void redirectionUserProduct(HttpServletResponse response, HttpServletRequest request, String path, String Redirection_failed_after_adding_product) {
+    private void redirectTo(HttpServletResponse response, HttpServletRequest request, String path) {
         try {
             response.sendRedirect(request.getContextPath() + path);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, Redirection_failed_after_adding_product, e);
+            LOGGER.log(Level.SEVERE, String.format("Redirection failed to: %s", path), e);
         }
+    }
+
+    private void redirectToLogin(HttpServletRequest request, HttpServletResponse response) {
+        redirectTo(response, request, "/?showLoginModal=true");
+    }
+
+    private void redirectToUserProducts(HttpServletRequest request, HttpServletResponse response) {
+        redirectTo(response, request, "/products/user");
+    }
+
+    private int parseCategoryId(String categoryFilter) {
+        if (categoryFilter != null && !categoryFilter.isEmpty()) {
+            try {
+                return Integer.parseInt(categoryFilter);
+            } catch (NumberFormatException e) {
+                LOGGER.log(Level.WARNING, String.format("Invalid categoryId format: %s", categoryFilter), e);
+            }
+        }
+        return -1;
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("categoryList", userManager.getAllCategory());
         String pathInfo = request.getPathInfo();
-        List<Category> categoryList = userManager.getAllCategory();
-        request.setAttribute("categoryList", categoryList);
-
         try {
-            if (pathInfo == null || pathInfo.equals("/")) {
+            if (pathInfo == null || "/".equals(pathInfo)) {
                 handleProductList(request, response);
-            } else if (pathInfo.equals("/user")) {
+            } else if ("/user".equals(pathInfo)) {
                 handleUserProducts(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -67,18 +82,8 @@ public class ProductServlet extends HttpServlet {
     private void handleProductList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String nameFilter = request.getParameter("name");
-        String categoryFilter = request.getParameter(CATEGORY_ID);
-        int categoryId = -1;
-        if (categoryFilter != null && !categoryFilter.isEmpty()) {
-            try {
-                categoryId = Integer.parseInt(categoryFilter);
-            } catch (NumberFormatException e) {
-                LOGGER.log(Level.WARNING, String.format("Invalid categoryId format: %s", categoryFilter), e);
-            }
-        }
-
-        List<Product> productList = userManager.getAllProductsFiltered(nameFilter, categoryId);
-        request.setAttribute("productList", productList);
+        int categoryId = parseCategoryId(request.getParameter(CATEGORY_ID));
+        request.setAttribute("productList", userManager.getAllProductsFiltered(nameFilter, categoryId));
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
@@ -87,45 +92,33 @@ public class ProductServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            try {
-                response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
-            } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, "Redirection failed for user login modal", e);
-            }
+            redirectToLogin(request, response);
             return;
         }
-        List<Product> productList = userManager.getAllProductsByUserId(user.getId());
-        request.setAttribute("productList", productList);
+        request.setAttribute("productList", userManager.getAllProductsByUserId(user.getId()));
         request.getRequestDispatcher("/myProducts.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            try {
-                response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
-            } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, "Redirection failed for user login modal", e);
-            }
+            redirectToLogin(request, response);
             return;
         }
 
         String name = request.getParameter("name");
         String description = request.getParameter("description");
         String image = request.getParameter("image");
-        int categoryId;
-        try {
-            categoryId = Integer.parseInt(request.getParameter(CATEGORY_ID));
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.WARNING, String.format("Invalid categoryId format: %s", request.getParameter(CATEGORY_ID)), e);
-            redirectionUserProduct(response, request, "/products/user", "Redirection failed after adding product");
+        int categoryId = parseCategoryId(request.getParameter(CATEGORY_ID));
+
+        if (categoryId == -1) {
+            redirectToUserProducts(request, response);
             return;
         }
 
         userManager.addProduct(name, description, image, user.getId(), categoryId, true);
-
-        redirectionUserProduct(response, request, "/products/user", "Redirection failed after adding product");
+        redirectToUserProducts(request, response);
     }
 }
