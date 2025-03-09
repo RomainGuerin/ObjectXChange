@@ -25,4 +25,10 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: Run tests
-      run: mvn test --file pom.xml
+      run: mvn test jacoco:report --file pom.xml
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: jacoco-report
+        path: target/site/jacoco
