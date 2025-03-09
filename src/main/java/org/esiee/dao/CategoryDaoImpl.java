@@ -11,7 +11,9 @@ import java.util.List;
 
 public class CategoryDaoImpl implements CategoryDao {
     @Override
-    public void save(Category entity) {}
+    public void save(Category entity) {
+        // It's a DAO
+    }
 
     @Override
     public boolean update(Category entity) {

@@ -25,30 +25,42 @@ import java.util.logging.Logger;
 public class ProductServlet extends HttpServlet {
     public static final String CATEGORY_ID = "categoryId";
     private static final Logger LOGGER = Logger.getLogger(ProductServlet.class.getName());
-    private final UserManager userManager;
+    private final transient UserManager userManager;
 
     public ProductServlet() {
         UserService userService = new UserService(new UserDaoImpl(), new ProductDaoImpl(), new CategoryDaoImpl(), new ExchangeDaoImpl());
         this.userManager = new UserManager(userService);
     }
 
+    private static void redirectionUserProduct(HttpServletResponse response, HttpServletRequest request, String path, String Redirection_failed_after_adding_product) {
+        try {
+            response.sendRedirect(request.getContextPath() + path);
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, Redirection_failed_after_adding_product, e);
+        }
+    }
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         String pathInfo = request.getPathInfo();
         List<Category> categoryList = userManager.getAllCategory();
         request.setAttribute("categoryList", categoryList);
 
-        if (pathInfo == null || pathInfo.equals("/")) {
-            handleProductList(request, response);
-        } else if (pathInfo.equals("/user")) {
-            try {
+        try {
+            if (pathInfo == null || pathInfo.equals("/")) {
+                handleProductList(request, response);
+            } else if (pathInfo.equals("/user")) {
                 handleUserProducts(request, response);
-            } catch (ServletException | IOException e) {
-                LOGGER.log(Level.SEVERE, "Error handling user products", e);
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
-        } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        } catch (ServletException | IOException e) {
+            LOGGER.log(Level.SEVERE, "Error processing request", e);
+            try {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, "Error sending error response", ex);
+            }
         }
     }
 
@@ -108,15 +120,12 @@ public class ProductServlet extends HttpServlet {
             categoryId = Integer.parseInt(request.getParameter(CATEGORY_ID));
         } catch (NumberFormatException e) {
             LOGGER.log(Level.WARNING, String.format("Invalid categoryId format: %s", request.getParameter(CATEGORY_ID)), e);
-            categoryId = -1;
+            redirectionUserProduct(response, request, "/products/user", "Redirection failed after adding product");
+            return;
         }
 
         userManager.addProduct(name, description, image, user.getId(), categoryId, true);
 
-        try {
-            response.sendRedirect(request.getContextPath() + "/products/user");
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Redirection failed after adding product", e);
-        }
+        redirectionUserProduct(response, request, "/products/user", "Redirection failed after adding product");
     }
 }
