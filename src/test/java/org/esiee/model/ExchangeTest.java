@@ -21,8 +21,8 @@ class ExchangeTest {
 
     @BeforeEach
     void setUpBeforeEach() {
-        exchangeWithAllFields = new Exchange(1, 2, 3, Status.Pending, now, now);
-        exchangeWithoutIdAndDates = new Exchange(2, 3, Status.Pending);
+        exchangeWithAllFields = new Exchange(1, 2, 3, Status.PENDING, now, now);
+        exchangeWithoutIdAndDates = new Exchange(2, 3, Status.PENDING);
     }
 
     @Test
@@ -31,7 +31,7 @@ class ExchangeTest {
             () -> assertEquals(1, exchangeWithAllFields.getId()),
             () -> assertEquals(2, exchangeWithAllFields.getProductIdAsked()),
             () -> assertEquals(3, exchangeWithAllFields.getProductIdOffered()),
-            () -> assertEquals(Status.Pending, exchangeWithAllFields.getStatus()),
+            () -> assertEquals(Status.PENDING, exchangeWithAllFields.getStatus()),
             () -> assertEquals(now, exchangeWithAllFields.getDateCreated()),
             () -> assertEquals(now, exchangeWithAllFields.getDateUpdated())
         );
@@ -42,7 +42,7 @@ class ExchangeTest {
         assertAll(
             () -> assertEquals(2, exchangeWithoutIdAndDates.getProductIdAsked()),
             () -> assertEquals(3, exchangeWithoutIdAndDates.getProductIdOffered()),
-            () -> assertEquals(Status.Pending, exchangeWithoutIdAndDates.getStatus()),
+            () -> assertEquals(Status.PENDING, exchangeWithoutIdAndDates.getStatus()),
             () -> assertNull(exchangeWithoutIdAndDates.getDateCreated()),
             () -> assertNull(exchangeWithoutIdAndDates.getDateUpdated())
         );
@@ -54,7 +54,7 @@ class ExchangeTest {
         exchangeWithAllFields.setId(10);
         exchangeWithAllFields.setProductIdAsked(20);
         exchangeWithAllFields.setProductIdOffered(30);
-        exchangeWithAllFields.setStatus(Status.Accepted);
+        exchangeWithAllFields.setStatus(Status.ACCEPTED);
         exchangeWithAllFields.setDateCreated(newDate);
         exchangeWithAllFields.setDateUpdated(newDate);
 
@@ -62,7 +62,7 @@ class ExchangeTest {
             () -> assertEquals(10, exchangeWithAllFields.getId()),
             () -> assertEquals(20, exchangeWithAllFields.getProductIdAsked()),
             () -> assertEquals(30, exchangeWithAllFields.getProductIdOffered()),
-            () -> assertEquals(Status.Accepted, exchangeWithAllFields.getStatus()),
+            () -> assertEquals(Status.ACCEPTED, exchangeWithAllFields.getStatus()),
             () -> assertEquals(newDate, exchangeWithAllFields.getDateCreated()),
             () -> assertEquals(newDate, exchangeWithAllFields.getDateUpdated())
         );

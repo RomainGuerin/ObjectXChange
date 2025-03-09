@@ -49,7 +49,7 @@ class ExchangeDaoImplTest {
     @Test
     void testSaveExchange() throws SQLException {
         // Création d'un échange pour le test
-        Exchange exchange = new Exchange(0, 100, 200, Status.Pending, new Date(), new Date());
+        Exchange exchange = new Exchange(0, 100, 200, Status.PENDING, new Date(), new Date());
 
         // Appel de la méthode save
         exchangeDao.save(exchange);
@@ -57,7 +57,7 @@ class ExchangeDaoImplTest {
         // Vérification que les bons paramètres ont été passés
         verify(mockPreparedStatement, times(1)).setInt(1, 100);
         verify(mockPreparedStatement, times(1)).setInt(2, 200);
-        verify(mockPreparedStatement, times(1)).setString(3, Status.Pending.toString());
+        verify(mockPreparedStatement, times(1)).setString(3, Status.PENDING.toString());
         verify(mockPreparedStatement, times(1)).executeUpdate();
     }
 
@@ -66,7 +66,7 @@ class ExchangeDaoImplTest {
         int exchangeId = 10;
         Date now = new Date();
         // Création d'un échange avec un id et une date de mise à jour
-        Exchange exchange = new Exchange(exchangeId, 100, 200, Status.Accepted, new Date(), now);
+        Exchange exchange = new Exchange(exchangeId, 100, 200, Status.ACCEPTED, new Date(), now);
 
         // Simuler qu'une ligne a été affectée lors de l'update
         when(mockPreparedStatement.executeUpdate()).thenReturn(1);
@@ -74,7 +74,7 @@ class ExchangeDaoImplTest {
         boolean result = exchangeDao.update(exchange);
 
         // Vérifier les paramètres transmis
-        verify(mockPreparedStatement, times(1)).setString(1, Status.Accepted.toString());
+        verify(mockPreparedStatement, times(1)).setString(1, Status.ACCEPTED.toString());
         verify(mockPreparedStatement, times(1)).setString(2, now.toString());
         verify(mockPreparedStatement, times(1)).setInt(3, exchangeId);
         verify(mockPreparedStatement, times(1)).executeUpdate();
@@ -91,7 +91,7 @@ class ExchangeDaoImplTest {
         when(mockResultSet.getInt("id")).thenReturn(15);
         when(mockResultSet.getInt("product_id_asked")).thenReturn(101);
         when(mockResultSet.getInt("product_id_offered")).thenReturn(202);
-        when(mockResultSet.getString("status")).thenReturn(Status.Pending.toString());
+        when(mockResultSet.getString("status")).thenReturn(Status.PENDING.toString());
         Timestamp createdTimestamp = Timestamp.valueOf("2022-01-01 00:00:00");
         Timestamp updatedTimestamp = Timestamp.valueOf("2022-01-02 00:00:00");
         when(mockResultSet.getTimestamp("created_at")).thenReturn(createdTimestamp);
@@ -110,7 +110,7 @@ class ExchangeDaoImplTest {
         assertEquals(15, exchange.getId());
         assertEquals(101, exchange.getProductIdAsked());
         assertEquals(202, exchange.getProductIdOffered());
-        assertEquals(Status.Pending, exchange.getStatus());
+        assertEquals(Status.PENDING, exchange.getStatus());
         assertEquals(createdTimestamp.getTime(), exchange.getDateCreated().getTime());
         assertEquals(updatedTimestamp.getTime(), exchange.getDateUpdated().getTime());
     }

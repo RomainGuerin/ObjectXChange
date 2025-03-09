@@ -20,9 +20,15 @@ import org.esiee.service.UserService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/exchange")
 public class ExchangeServlet extends HttpServlet {
+    public static final String EXCHANGE_ERROR_PRODUCT_NOT_FOUND = "/exchange?error=productNotFound";
+    public static final String EXCHANGE_ERROR_PRODUCT_NOT_AVAILABLE = "/exchange?error=productNotAvailable";
+    public static final String EXCHANGE_ERROR_EXCHANGE_ERROR = "/exchange?error=exchangeError";
+    private static final Logger LOGGER = Logger.getLogger(ExchangeServlet.class.getName());
     private final UserManager userManager;
 
     public ExchangeServlet() {
@@ -30,8 +36,9 @@ public class ExchangeServlet extends HttpServlet {
         this.userManager = new UserManager(userService);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, NumberFormatException {
         // Vérifier que l'utilisateur est connecté
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
@@ -62,8 +69,8 @@ public class ExchangeServlet extends HttpServlet {
         request.getRequestDispatcher("/exchange.jsp").forward(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
@@ -71,6 +78,24 @@ public class ExchangeServlet extends HttpServlet {
             return;
         }
 
+        try {
+            if (updateExchange(request, response)) return;
+        } catch (IOException e) {
+            LOGGER.log(java.util.logging.Level.SEVERE, "Failed to update exchange", e);
+        }
+
+        try {
+            createExchange(request, response, user);
+        } catch (IOException e) {
+            try {
+                response.sendRedirect(request.getContextPath() + EXCHANGE_ERROR_EXCHANGE_ERROR);
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, "Failed to redirect after exchange creation", ex);
+            }
+        }
+    }
+
+    private boolean updateExchange(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Si le paramètre "exchangeId" est présent, il s'agit d'une mise à jour d'un échange existant
         String exchangeIdParam = request.getParameter("exchangeId");
         if (exchangeIdParam != null) {
@@ -82,40 +107,12 @@ public class ExchangeServlet extends HttpServlet {
             Exchange exchange = userManager.getExchangeById(exchangeId);
             if (exchange == null) {
                 response.sendRedirect(request.getContextPath() + "/exchange?error=exchangeNotFound");
-                return;
+                return true;
             }
 
             // Si on accepte l'échange, il faut vérifier la disponibilité des produits
-            if (newStatus == Status.Accepted) {
-                Product productAsked = userManager.getProductById(exchange.getProductIdAsked());
-                Product productOffered = userManager.getProductById(exchange.getProductIdOffered());
-
-                if (productAsked == null || productOffered == null) {
-                    response.sendRedirect(request.getContextPath() + "/exchange?error=productNotFound");
-                    return;
-                }
-                if (!productAsked.isAvailable() || !productOffered.isAvailable()) {
-                    // Si un produit n'est plus disponible, on refuse l'échange
-                    exchange.setStatus(Status.Denied);
-                    exchange.setDateUpdated(new java.util.Date());
-                    userManager.updateExchange(exchange, Status.Denied);
-                    response.sendRedirect(request.getContextPath() + "/exchange?error=productNotAvailable");
-                    return;
-                }
-
-                // Les deux produits sont disponibles : on les marque comme non disponibles
-                userManager.updateProduct(productAsked, false);
-                userManager.updateProduct(productOffered, false);
-
-                // On met à jour l'échange en Accepted
-                exchange.setStatus(Status.Accepted);
-                exchange.setDateUpdated(new java.util.Date());
-                boolean updated = userManager.updateExchange(exchange, Status.Accepted);
-                if (updated) {
-                    response.sendRedirect(request.getContextPath() + "/exchange?success=exchangeUpdated");
-                } else {
-                    response.sendRedirect(request.getContextPath() + "/exchange?error=exchangeUpdateError");
-                }
+            if (newStatus == Status.ACCEPTED) {
+                if (checkStatusExchange(request, response, exchange)) return true;
             } else {
                 // Pour les autres statuts (ex : Denied), mise à jour simple sans modification de la disponibilité
                 exchange.setStatus(newStatus);
@@ -127,9 +124,45 @@ public class ExchangeServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/exchange?error=exchangeUpdateError");
                 }
             }
-            return;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkStatusExchange(HttpServletRequest request, HttpServletResponse response, Exchange exchange) throws IOException {
+        Product productAsked = userManager.getProductById(exchange.getProductIdAsked());
+        Product productOffered = userManager.getProductById(exchange.getProductIdOffered());
+
+        if (productAsked == null || productOffered == null) {
+            response.sendRedirect(request.getContextPath() + EXCHANGE_ERROR_PRODUCT_NOT_FOUND);
+            return true;
+        }
+        if (!productAsked.isAvailable() || !productOffered.isAvailable()) {
+            // Si un produit n'est plus disponible, on refuse l'échange
+            exchange.setStatus(Status.DENIED);
+            exchange.setDateUpdated(new java.util.Date());
+            userManager.updateExchange(exchange, Status.DENIED);
+            response.sendRedirect(request.getContextPath() + EXCHANGE_ERROR_PRODUCT_NOT_AVAILABLE);
+            return true;
         }
 
+        // Les deux produits sont disponibles : on les marque comme non disponibles
+        userManager.updateProduct(productAsked, false);
+        userManager.updateProduct(productOffered, false);
+
+        // On met à jour l'échange en Accepted
+        exchange.setStatus(Status.ACCEPTED);
+        exchange.setDateUpdated(new java.util.Date());
+        boolean updated = userManager.updateExchange(exchange, Status.ACCEPTED);
+        if (updated) {
+            response.sendRedirect(request.getContextPath() + "/exchange?success=exchangeUpdated");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/exchange?error=exchangeUpdateError");
+        }
+        return false;
+    }
+
+    private void createExchange(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
         // Sinon, il s'agit de la création d'un nouvel échange
         try {
             int productIdAsked = Integer.parseInt(request.getParameter("productIdAsked"));
@@ -138,7 +171,7 @@ public class ExchangeServlet extends HttpServlet {
             // Récupérer le produit demandé pour vérifier qu'il n'appartient pas à l'utilisateur et qu'il est disponible
             Product productAsked = userManager.getProductById(productIdAsked);
             if (productAsked == null) {
-                response.sendRedirect(request.getContextPath() + "/exchange?error=productNotFound");
+                response.sendRedirect(request.getContextPath() + EXCHANGE_ERROR_PRODUCT_NOT_FOUND);
                 return;
             }
             if (productAsked.getUserId() == user.getId()) {
@@ -146,32 +179,26 @@ public class ExchangeServlet extends HttpServlet {
                 return;
             }
             if (!productAsked.isAvailable()) {
-                response.sendRedirect(request.getContextPath() + "/exchange?error=productNotAvailable");
+                response.sendRedirect(request.getContextPath() + EXCHANGE_ERROR_PRODUCT_NOT_AVAILABLE);
                 return;
             }
 
             // Vérifier également que le produit offert existe et est disponible
             Product productOffered = userManager.getProductById(productIdOffered);
             if (productOffered == null) {
-                response.sendRedirect(request.getContextPath() + "/exchange?error=productNotFound");
+                response.sendRedirect(request.getContextPath() + EXCHANGE_ERROR_PRODUCT_NOT_FOUND);
                 return;
             }
             if (!productOffered.isAvailable()) {
-                response.sendRedirect(request.getContextPath() + "/exchange?error=productNotAvailable");
+                response.sendRedirect(request.getContextPath() + EXCHANGE_ERROR_PRODUCT_NOT_AVAILABLE);
                 return;
             }
 
-            // Optionnel : Vérifier qu'un échange n'existe pas déjà pour ces produits
-            // if (userManager.isExchangeAlreadyExists(productIdAsked, productIdOffered)) {
-            //     response.sendRedirect(request.getContextPath() + "/exchange?error=exchangeExists");
-            //     return;
-            // }
-
             // Créer un nouvel échange avec le statut Pending
-            userManager.setNewExchange(productIdAsked, productIdOffered, Status.Pending);
+            userManager.setNewExchange(productIdAsked, productIdOffered, Status.PENDING);
             response.sendRedirect(request.getContextPath() + "/exchange?success=exchangeCreated");
         } catch (Exception e) {
-            response.sendRedirect(request.getContextPath() + "/exchange?error=exchangeError");
+            response.sendRedirect(request.getContextPath() + EXCHANGE_ERROR_EXCHANGE_ERROR);
         }
     }
 }

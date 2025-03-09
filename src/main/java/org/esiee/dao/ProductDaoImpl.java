@@ -39,7 +39,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getAllProducts() {
-        String query = "SELECT * FROM Product ORDER BY date_created DESC";
+        String query = "SELECT id, name, description, date_created, images, user_id, category_id, availability FROM Product ORDER BY date_created DESC";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             return getProduct(ps);
@@ -50,7 +50,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getProductByUserId(int userId) {
-        String query = "SELECT * FROM Product WHERE user_id = ? ORDER BY date_created DESC";
+        String query = "SELECT id, name, description, date_created, images, user_id, category_id, availability FROM Product WHERE user_id = ? ORDER BY date_created DESC";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, userId);
@@ -81,7 +81,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getFilteredProducts(String name, int categoryId) {
-        String query = "SELECT * FROM Product WHERE name LIKE ?";
+        String query = "SELECT id, name, description, date_created, images, user_id, category_id, availability FROM Product WHERE name LIKE ?";
 
         if (categoryId > 0) {
             query += " AND category_id = ?";
@@ -105,7 +105,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product getProductById(int productId) {
-        String query = "SELECT * FROM Product WHERE id = ?";
+        String query = "SELECT id, name, description, date_created, images, user_id, category_id, availability FROM Product WHERE id = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, productId);
