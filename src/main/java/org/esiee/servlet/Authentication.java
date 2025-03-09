@@ -18,35 +18,32 @@ import java.util.logging.Logger;
 
 @WebServlet({"/register", "/login"})
 public class Authentication extends HttpServlet {
+    public static final String FAILED_TO_REDIRECT_AFTER_REGISTRATION = "Failed to redirect after registration";
+    public static final String FAILED_TO_REDIRECT_AFTER_LOGIN = "Failed to redirect after login";
     private static final Logger LOGGER = Logger.getLogger(Authentication.class.getName());
-    private final UserManager userManager;
+    private final transient UserManager userManager;
 
     public Authentication() {
         UserService userService = new UserService(new UserDaoImpl(), new ProductDaoImpl(), new CategoryDaoImpl(), new ExchangeDaoImpl());
         this.userManager = new UserManager(userService);
     }
 
-    private static void checkValidityPasswordEmail(HttpServletRequest request, HttpServletResponse response, IllegalArgumentException e) {
-        if (
-                e.toString().contains("Invalid email format") ||
-                        e.toString().contains("Password must be at least 8 characters")
-        ) {
-            try {
-                response.sendRedirect(request.getContextPath() + "/?error=invalid");
-            } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "Failed to redirect after registration", ex);
-            }
-        } else {
-            try {
-                response.sendRedirect(request.getContextPath() + "/?error=exists");
-            } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "Failed to redirect after registration", ex);
-            }
+    private void handleRedirect(HttpServletRequest request, HttpServletResponse response, String path, String logMessage) {
+        try {
+            response.sendRedirect(request.getContextPath() + path);
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, logMessage, ex);
         }
     }
 
+    private void checkValidityPasswordEmail(HttpServletRequest request, HttpServletResponse response, IllegalArgumentException e) {
+        String errorPath = e.toString().contains("Invalid email format") || e.toString().contains("Password must be at least 8 characters")
+                ? "/?error=invalid" : "/?error=exists";
+        handleRedirect(request, response, errorPath, FAILED_TO_REDIRECT_AFTER_REGISTRATION);
+    }
+
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         String action = request.getServletPath();
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -55,7 +52,7 @@ public class Authentication extends HttpServlet {
             String name = request.getParameter("name");
             try {
                 userManager.register(name, email, password);
-                response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
+                handleRedirect(request, response, "/?showLoginModal=true", FAILED_TO_REDIRECT_AFTER_REGISTRATION);
             } catch (IllegalArgumentException e) {
                 checkValidityPasswordEmail(request, response, e);
             }
@@ -63,9 +60,9 @@ public class Authentication extends HttpServlet {
             try {
                 User user = userManager.login(email, password);
                 request.getSession().setAttribute("user", user);
-                response.sendRedirect(request.getContextPath() + "/?success=loggedin");
+                handleRedirect(request, response, "/?success=loggedin", FAILED_TO_REDIRECT_AFTER_LOGIN);
             } catch (IllegalArgumentException e) {
-                response.sendRedirect(request.getContextPath() + "/?error=invalid");
+                handleRedirect(request, response, "/?error=invalid", FAILED_TO_REDIRECT_AFTER_LOGIN);
             }
         }
     }

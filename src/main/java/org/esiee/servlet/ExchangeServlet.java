@@ -29,7 +29,7 @@ public class ExchangeServlet extends HttpServlet {
     public static final String EXCHANGE_ERROR_PRODUCT_NOT_AVAILABLE = "/exchange?error=productNotAvailable";
     public static final String EXCHANGE_ERROR_EXCHANGE_ERROR = "/exchange?error=exchangeError";
     private static final Logger LOGGER = Logger.getLogger(ExchangeServlet.class.getName());
-    private final UserManager userManager;
+    private final transient UserManager userManager;
 
     public ExchangeServlet() {
         UserService userService = new UserService(new UserDaoImpl(), new ProductDaoImpl(), new CategoryDaoImpl(), new ExchangeDaoImpl());
@@ -43,7 +43,11 @@ public class ExchangeServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
+            try {
+                response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Failed to redirect to login modal", e);
+            }
             return;
         }
         // Récupérer les échanges liés à l'utilisateur
@@ -66,7 +70,11 @@ public class ExchangeServlet extends HttpServlet {
         request.setAttribute("receivedExchanges", receivedExchanges);
         request.setAttribute("sentExchanges", sentExchanges);
 
-        request.getRequestDispatcher("/exchange.jsp").forward(request, response);
+        try {
+            request.getRequestDispatcher("/exchange.jsp").forward(request, response);
+        } catch (ServletException | IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to forward to /exchange.jsp", e);
+        }
     }
 
     @Override
@@ -74,7 +82,11 @@ public class ExchangeServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
+            try {
+                response.sendRedirect(request.getContextPath() + "/?showLoginModal=true");
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Failed to redirect to login modal", e);
+            }
             return;
         }
 

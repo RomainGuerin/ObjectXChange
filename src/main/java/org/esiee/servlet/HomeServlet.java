@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 @WebServlet("/")
 public class HomeServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(HomeServlet.class.getName());
-    private final UserManager userManager;
+    private final transient UserManager userManager;
 
     public HomeServlet() {
         UserService userService = new UserService(new UserDaoImpl(), new ProductDaoImpl(), new CategoryDaoImpl(), new ExchangeDaoImpl());
