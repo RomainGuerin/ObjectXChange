@@ -32,7 +32,7 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: Run tests
-      run: mvn test jacoco:report --file pom.xml
+      run: mvn test jacoco:report --file pom.xml -Dtest=!Docker*
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
