@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.*;
 import java.time.Duration;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ObjectXChangeTests {
     private WebDriver driver;
@@ -86,8 +86,8 @@ public class ObjectXChangeTests {
         driver.findElement(By.xpath("//button[text()='Filtrer']")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("card-title")));
         List<WebElement> titles = driver.findElements(By.className("card-title"));
-        assertTrue("Le produit recherché n'est pas affiché",
-                titles.stream().anyMatch(e -> e.getText().contains("Produit")));
+        assertTrue(titles.stream().anyMatch(e -> e.getText().contains("Produit")),
+                "Le produit recherché n'est pas affiché");
     }
 
     @Test
@@ -100,8 +100,8 @@ public class ObjectXChangeTests {
         driver.findElement(By.xpath("//button[text()='Filtrer']")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("card-body")));
         List<WebElement> cards = driver.findElements(By.className("card-body"));
-        assertTrue("Aucun produit avec la catégorie " + category + " n'est affiché",
-                cards.stream().anyMatch(card -> card.getText().contains(category)));
+        assertTrue(cards.stream().anyMatch(card -> card.getText().contains(category)),
+                "Aucun produit avec la catégorie " + category + " n'est affiché");
     }
 
     @Test
@@ -113,14 +113,14 @@ public class ObjectXChangeTests {
         driver.get(baseUrl);
         List<WebElement> exchangeButtons = driver.findElements(
                 By.xpath("//button[contains(text(),'Proposer un échange') and not(contains(@class,'btn-disabled'))]"));
-        assertFalse("Aucun produit échangeable trouvé", exchangeButtons.isEmpty());
+        assertFalse(exchangeButtons.isEmpty(), "Aucun produit échangeable trouvé");
         exchangeButtons.get(0).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("modal_product_client")));
         List<WebElement> radios = driver.findElements(By.cssSelector("input[type='radio'][name='productIdOffered']"));
         WebElement targetRadio = radios.stream()
                 .filter(radio -> radio.findElement(By.xpath("./ancestor::tr")).getText().contains(objectName))
                 .findFirst().orElse(null);
-        assertNotNull("Le produit ajouté n'est pas dans la liste", targetRadio);
+        assertNotNull(targetRadio, "Le produit ajouté n'est pas dans la liste");
         targetRadio.click();
         driver.findElement(By.xpath("//button[text()='Proposer cet échange']")).click();
         wait.until(ExpectedConditions.urlContains("success=exchangeCreated"));
