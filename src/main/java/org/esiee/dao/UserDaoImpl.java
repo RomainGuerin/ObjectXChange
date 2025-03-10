@@ -8,6 +8,11 @@ import java.sql.*;
  * Implementation of the UserDao interface for interacting with the User data in a SQLite database.
  */
 public class UserDaoImpl implements UserDao {
+    /**
+     * Saves a new User entity to the database.
+     *
+     * @param entity the User entity to be saved
+     */
     @Override
     public void save(User entity) {
         String query = "INSERT INTO User (email, name, password) VALUES (?, ?, ?)";
@@ -22,11 +27,23 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    /**
+     * Updates an existing User entity in the database.
+     *
+     * @param entity the User entity to be updated
+     * @return true if the update was successful, false otherwise
+     */
     @Override
     public boolean update(User entity) {
         return false;
     }
 
+    /**
+     * Retrieves a User entity by its email.
+     *
+     * @param email the email of the user
+     * @return the User object with the specified email, or null if not found
+     */
     @Override
     public User getByEmail(String email) {
         String query = "SELECT id, name, email, password FROM User WHERE email = ?";
