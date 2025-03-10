@@ -23,7 +23,7 @@
         <c:when test="${not empty sessionScope.user}">
           <div class="flex items-center">
             <div class="dropdown">
-              <button class="btn btn-ghost m-1">
+              <div id="txt-welcome" tabindex="0" role="button" class="btn btn-ghost m-1">
                 Bienvenue, ${sessionScope.user.name}
               </button>
               <ul class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
@@ -40,10 +40,10 @@
         </c:when>
         <c:otherwise>
           <li>
-            <button class="btn btn-ghost" onclick="modal_connexion.showModal()">Connexion</button>
+            <button id="btn-login-show" class="btn btn-ghost" onclick="modal_connexion.showModal()">Connexion</button>
           </li>
           <li>
-            <button class="ml-2 btn btn-outline" onclick="modal_inscription.showModal()">Inscription</button>
+            <button id="btn-register-show" class="ml-2 btn btn-outline" onclick="modal_inscription.showModal()">Inscription</button>
           </li>
         </c:otherwise>
       </c:choose>
@@ -214,7 +214,7 @@
           </svg>
           <input id="ipt-login-password" type="password" name="password" class="grow" placeholder="Mot de passe" required />
         </div>
-        <button class="btn btn-primary" type="submit">Se connecter</button>
+        <button id="btn-login-submit" class="btn btn-primary" type="submit">Se connecter</button>
       </form>
     </div>
   </dialog>
@@ -247,7 +247,7 @@
           </svg>
           <input id="ipt-register-password" type="password" name="password" class="grow" placeholder="Mot de passe" required />
         </div>
-        <button class="btn btn-primary" type="submit">Inscription</button>
+        <button id="btn-register-submit" class="btn btn-primary" type="submit">Inscription</button>
       </form>
     </div>
   </dialog>
