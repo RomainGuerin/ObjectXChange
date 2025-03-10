@@ -32,3 +32,12 @@ jobs:
       with:
         name: jacoco-report
         path: target/site/jacoco
+
+    - name: Générer la Javadoc
+      run: mvn javadoc:javadoc --file pom.xml
+
+    - name: Uploader la Javadoc
+      uses: actions/upload-artifact@v4
+      with:
+        name: javadoc
+        path: target/site/apidocs
