@@ -3,9 +3,8 @@ package org.esiee.model;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import java.util.Date;
 
