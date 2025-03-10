@@ -13,6 +13,11 @@ public class ExchangeDaoImpl implements ExchangeDao {
 
     private static final Logger LOGGER = Logger.getLogger(ExchangeDaoImpl.class.getName());
 
+    /**
+     * Saves a new Exchange entity to the database.
+     *
+     * @param entity the Exchange entity to be saved
+     */
     @Override
     public void save(Exchange entity) {
         String query = "INSERT INTO Exchange (product_id_asked, product_id_offered, status) VALUES (?, ?, ?)";
@@ -27,6 +32,12 @@ public class ExchangeDaoImpl implements ExchangeDao {
         }
     }
 
+    /**
+     * Updates an existing Exchange entity in the database.
+     *
+     * @param entity the Exchange entity to be updated
+     * @return true if the update was successful, false otherwise
+     */
     @Override
     public boolean update(Exchange entity) {
         String query = "UPDATE exchange SET status = ?, updated_at = ? WHERE id = ?";
@@ -41,6 +52,11 @@ public class ExchangeDaoImpl implements ExchangeDao {
         }
     }
 
+    /**
+     * Saves a new Exchange entity to the database.
+     *
+     * @param userId the Exchange entity to be saved
+     */
     @Override
     public List<Exchange> getExchangesByUserId(int userId) {
         String query = "SELECT id, status, product_id_asked, product_id_offered, created_at, updated_at FROM exchange WHERE product_id_asked IN (SELECT id FROM Product WHERE user_id = ?) OR product_id_offered IN (SELECT id FROM Product WHERE user_id = ?)";
@@ -74,6 +90,12 @@ public class ExchangeDaoImpl implements ExchangeDao {
         return exchanges;
     }
 
+    /**
+     * Retrieves an exchange by its ID.
+     *
+     * @param productId the ID of the exchange
+     * @return the Exchange object with the specified ID
+     */
     @Override
     public Exchange getExchangeById(int productId) {
         String query = "SELECT id, status, product_id_asked, product_id_offered, created_at, updated_at FROM exchange WHERE id = ?";

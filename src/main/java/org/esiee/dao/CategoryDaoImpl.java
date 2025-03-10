@@ -9,17 +9,31 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of the CategoryDao interface for performing CRUD operations on Category objects.
+ */
 public class CategoryDaoImpl implements CategoryDao {
     @Override
     public void save(Category entity) {
         // It's a DAO
     }
 
-    @Override
-    public boolean update(Category entity) {
-        return false;
-    }
+        /**
+         * Updates an existing Category entity in the database.
+         *
+         * @param entity the Category entity to be updated
+         * @return true if the update was successful, false otherwise
+         */
+        @Override
+        public boolean update(Category entity) {
+            return false;
+        }
 
+    /**
+     * Retrieves a list of all categories from the database.
+     *
+     * @return a list of Category objects
+     */
     @Override
     public List<Category> getAllCategory() {
         String query = "SELECT id, name FROM Category";
