@@ -3,8 +3,6 @@ package org.esiee.selenium;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.*;
@@ -15,13 +13,23 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ObjectXChangeTests {
-    private WebDriver driver;
+    private static WebDriver driver;
     private WebDriverWait wait;
     private final String baseUrl = "http://localhost:4444/wd/hub";
+//    private final String baseUrl = "http://localhost:8082/ObjectXChange";
     private final String user = "TicTac";
     private final String email = "TicTacToePic@lhorloge.com";
     private final String password = "AliSuperMan2030!";
 
+    @BeforeAll
+    static void up() {
+        WebDriverManager.firefoxdriver().setup();
+        FirefoxOptions options = new FirefoxOptions();
+        options.addPreference("remote.active-protocols", 3);
+        driver = new FirefoxDriver(options);
+        driver.manage().window().maximize();
+        driver.quit();
+    }
     @BeforeEach
     public void setUp() {
         WebDriverManager.firefoxdriver().setup();
